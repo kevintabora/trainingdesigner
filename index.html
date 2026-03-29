@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Training Designer</title>
+    <link rel="icon" type="image/png" sizes="32x32" href="icon.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Patrick+Hand&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js" defer></script>
+    <script src="https://cdn.sheetjs.com/xlsx-0.19.3/package/dist/xlsx.full.min.js" defer></script>
+</head>
+<body>
+    <div class="mobile-notice">
+        <div class="mobile-notice-icon">💻</div>
+        <h2>Desktop Recommended</h2>
+        <p>Training Designer is built for desktop browsers. For the best experience with tables, drag-and-drop, and report charts, please open this on a laptop or desktop.</p>
+    </div>
+    <div class="dialog-overlay" id="dialogOverlay">
+        <div class="dialog-box">
+            <div class="dialog-icon" id="dialogIcon"></div>
+            <div class="dialog-body">
+                <div class="dialog-title" id="dialogTitle"></div>
+                <div class="dialog-message" id="dialogMessage"></div>
+                <input class="dialog-input" id="dialogInput" style="display:none;">
+            </div>
+            <div class="dialog-actions" id="dialogActions"></div>
+        </div>
+    </div>
+    <div class="mobile-notice">
+        <div class="mobile-notice-icon">💻</div>
+        <h2>Desktop Recommended</h2>
+        <p>Training Designer is built for desktop browsers. For the best experience with tables, drag-and-drop, and report charts, please open this on a laptop or desktop.</p>
+    </div>
+    <button id="toggleMenuBtn"></button>
+    <div class="container">
+        <div id="menuContainer" class="menu-open">
+            <h1 id="mainTitle"><span id="mainTitleFull">Training Designer</span><span id="mainTitleShort">TD<span class="td-tooltip">Training Designer</span></span></h1>
+            <div id="menuButtons" class="menu-buttons">
+                <button id="addCourseBtn" class="menu-button">+ Add Course</button>
+                <div class="dropdown">
+                    <button id="fileBtn" class="menu-button">File</button>
+                    <div id="fileDropdown" class="dropdown-content hidden">
+                        <button id="loadBtn" class="menu-button dropdown-item">Load</button>
+                        <button id="saveBtn" class="menu-button dropdown-item">Save</button>
+                        <button id="resetBtn" class="menu-button dropdown-item">Reset</button>
+                        <button id="resourceBtn" class="menu-button dropdown-item">Guide</button>
+                        <button id="templateBtn" class="menu-button dropdown-item">Template</button>
+                    </div>
+                </div>
+                <button id="hideAllBreaksBtn" class="menu-button">Hide Breaks</button>
+                <button id="deleteAllBreaksBtn" class="menu-button">Delete Breaks</button>
+                <button id="selectAllBtn" class="menu-button" style="display: none;">Select All</button>
+                <div class="dropdown">
+                    <button id="daysBtn" class="menu-button">Days</button>
+                    <div id="daysDropdown" class="dropdown-content hidden">
+                        <p id="daysInstruction" style="margin: 5px 0 10px; font-size: var(--text-xs); color: var(--ink-tertiary); text-align: center; line-height: 1.4;"><strong>Note: </strong>Uncheck to hide a day (deselects all rows). A warning appears when days are hidden. Hidden days ignore Select All. Click a day to scroll to it.</p>
+                        <div id="daysList" class="days-list"></div>
+                    </div>
+                </div>
+                <button id="startTimeBtn" class="menu-button">Start Time</button>
+                <button id="toggleScheduleBtn" class="menu-button">Show Schedule</button>
+                <button id="togglePlannerBtn" class="menu-button">View Planner</button>
+                <button id="goToReportBtn" class="menu-button" style="display:none;" onclick="(function(){ var el = document.getElementById('programReport'); var top = el.getBoundingClientRect().top + window.pageYOffset - document.getElementById('menuContainer').offsetHeight - 16; window.scrollTo({top: top, behavior: 'smooth'}); })()">Report <svg width="9" height="11" viewBox="0 0 11 14" fill="none" xmlns="http://www.w3.org/2000/svg" style="display:inline-block;vertical-align:middle;margin-left:3px;"><line x1="5.5" y1="0" x2="5.5" y2="11" stroke="currentColor" stroke-width="2.2"/><polyline points="1,7 5.5,12.5 10,7" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"/></svg></button>
+                <button id="goToOutlineBtn" class="menu-button" style="display:none;" onclick="(function(){ var el = document.getElementById('programDetails'); var top = el.getBoundingClientRect().top + window.pageYOffset - document.getElementById('menuContainer').offsetHeight - 16; window.scrollTo({top: top, behavior: 'smooth'}); })()">Design <svg width="9" height="11" viewBox="0 0 11 14" fill="none" xmlns="http://www.w3.org/2000/svg" style="display:inline-block;vertical-align:middle;margin-left:3px;"><line x1="5.5" y1="14" x2="5.5" y2="3" stroke="currentColor" stroke-width="2.2"/><polyline points="1,7 5.5,1.5 10,7" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"/></svg></button>
+                <button id="undoBtn" class="menu-button" title="Nothing to undo" style="font-size:var(--text-lg); letter-spacing:0;">↺</button>
+            </div>
+        </div>
+
+        <!-- Course Form Section -->
+        <section id="courseForm">
+            <h2 id="courseFormHeader" class="hidden"></h2>
+            <form id="courseInputForm" class="hidden">
+                <div class="form-group">
+                    <label>
+                        Day
+                        <input type="number" id="day" required>
+                    </label>
+                    <label>
+                        Unit (Main Topic)
+                        <input type="text" id="chapter" placeholder="e.g., Salesforce, Leadership" required>
+                    </label>
+                    <label>
+                        Module (Subtopic)
+                        <input type="text" id="moduleTitle" placeholder="e.g., Navigating the Homepage, Running Meetings" required>
+                    </label>
+                </div>
+                
+                <div id="learningActivities">
+                    <div class="learning-activity">
+                        <h3>Learning Activity #1</h3>
+                        <button class="delete-activity-btn">×</button>
+                        <div class="form-group">
+                            <label>
+                                Learning Objective
+                                <input type="text" class="objective" placeholder="e.g., Identify key features of the application" required>
+                            </label>
+                            <label>
+                                Cognitive Task
+                                <select class="cognitiveTask"></select>
+                            </label>
+                            <label>
+                                Learner Activity
+                                <select class="learnerActivity"></select>
+                            </label>
+                            <label>
+                                Delivery Method
+                                <select class="deliveryMethod"></select>
+                            </label>
+                            <label>
+                                Media
+                                <select class="media"></select>
+                            </label>
+                            <label>
+                                Type of Content
+                                <select class="contentType"></select>
+                            </label>
+                            <label>
+                                Duration (minutes)
+                                <input type="number" class="duration" required>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="button-group">
+                    <button type="button" class="tr-orange-btn" id="addActivityBtn">+ Learning Activity</button>
+                    <button type="submit" class="tr-orange-btn">Submit</button>
+                    <button type="button" class="tr-orange-btn" id="cancelBtn">Cancel</button>
+                </div>
+            </form>
+        </section>
+
+        <!-- Design Section -->
+        <section id="programDetails">
+            <h2 id="programDetailsHeader">Design</h2>
+            <div id="dayTablesContainer"></div>
+        </section>
+
+        <!-- Report Section -->
+        <section id="programReport">
+            <h2 id="programReportHeader">Report</h2>
+            <div class="charts-container">
+
+                <!-- Cognitive Task Report -->
+                <div class="chart-block">
+                    <div class="report-block">
+                        <div class="numerical-table-container">
+                            <div class="chart-header">Cognitive Task</div>
+                            <div class="chart-description">
+                                <p>Mental processes learners engage in to acquire, understand, and apply knowledge, such as remembering, analyzing, or creating.</p>
+                            </div>
+                            <button class="toggle-days-btn">Show Days</button>
+                            <div class="days-container hidden"></div>
+                            <table class="numerical-table" id="cognitiveTable"></table>
+                        </div>
+                        <div class="chart-wrapper"><canvas id="cognitivePieChart"></canvas></div>
+                        <div class="chart-wrapper"><canvas id="cognitiveLineChart"></canvas></div>
+                    </div>
+                </div>
+
+                <!-- Learner Activity Report -->
+                <div class="chart-block">
+                    <div class="report-block">
+                        <div class="numerical-table-container">
+                            <div class="chart-header">Learner Activity</div>
+                            <div class="chart-description">
+                                <p>Specific tasks or exercises learners undertake, designed to help them meet the learning objectives by actively engaging with the material.</p>
+                            </div>
+                            <button class="toggle-days-btn">Show Days</button>
+                            <div class="days-container hidden"></div>
+                            <table class="numerical-table" id="activityTable"></table>
+                        </div>
+                        <div class="chart-wrapper"><canvas id="activityPieChart"></canvas></div>
+                        <div class="chart-wrapper"><canvas id="activityLineChart"></canvas></div>
+                    </div>
+                </div>
+
+                <!-- Delivery Method Report -->
+                <div class="chart-block">
+                    <div class="report-block">
+                        <div class="numerical-table-container">
+                            <div class="chart-header">Delivery Method</div>
+                            <div class="chart-description">
+                                <p>The format or approach used to present learning content to learners.</p>
+                            </div>
+                            <button class="toggle-days-btn">Show Days</button>
+                            <div class="days-container hidden"></div>
+                            <table class="numerical-table" id="deliveryTable"></table>
+                        </div>
+                        <div class="chart-wrapper"><canvas id="deliveryPieChart"></canvas></div>
+                        <div class="chart-wrapper"><canvas id="deliveryLineChart"></canvas></div>
+                    </div>
+                </div>
+
+                <!-- Media Report -->
+                <div class="chart-block">
+                    <div class="report-block">
+                        <div class="numerical-table-container">
+                            <div class="chart-header">Media</div>
+                            <div class="chart-description">
+                                <p>The tools or channels used to deliver content, such as videos, podcasts, or printed materials. Focuses on the physical or digital format rather than the training approach.</p>
+                            </div>
+                            <button class="toggle-days-btn">Show Days</button>
+                            <div class="days-container hidden"></div>
+                            <table class="numerical-table" id="mediaTable"></table>
+                        </div>
+                        <div class="chart-wrapper"><canvas id="mediaPieChart"></canvas></div>
+                        <div class="chart-wrapper"><canvas id="mediaLineChart"></canvas></div>
+                    </div>
+                </div>
+
+                <!-- Content Type Report -->
+                <div class="chart-block">
+                    <div class="report-block">
+                        <div class="numerical-table-container">
+                            <div class="chart-header">Type of Content</div>
+                            <div class="chart-description">
+                                <p>Categorizes the nature of the learning material, such as factual information, procedural instructions, or problem-solving scenarios.</p>
+                            </div>
+                            <button class="toggle-days-btn">Show Days</button>
+                            <div class="days-container hidden"></div>
+                            <table class="numerical-table" id="contentTable"></table>
+                        </div>
+                        <div class="chart-wrapper"><canvas id="contentPieChart"></canvas></div>
+                        <div class="chart-wrapper"><canvas id="contentLineChart"></canvas></div>
+                    </div>
+                </div>
+
+                <!-- Type of Content vs. Cognitive Tasks Table -->
+                <div class="chart-block type-vs-cognitive">
+                    <div class="report-block">
+                        <div class="numerical-table-container">
+                            <div class="chart-header">Type of Content vs. Cognitive Tasks</div>
+                            <div class="chart-description">
+                                <p>Illustrates the relationship between content types and cognitive tasks. Helps identify emphasis and gaps for a balanced approach to learning objectives.</p>
+                            </div>
+                            <button class="toggle-days-btn">Show Days</button>
+                            <div class="days-container hidden"></div>
+                            <table class="numerical-table" id="typeVsCognitiveTable">
+                                <thead>
+                                    <tr>
+                                        <th>Cognitive Tasks</th>
+                                        <th>Information <span class="content-group">(Facts, Concepts, & Workflows)</span></th>
+                                        <th>Procedural <span class="content-group">(Software, Tools, & CS)</span></th>
+                                        <th>Problem-Solving <span class="content-group">(Software, Tools, & CS)</span></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr><td>Remember</td><td></td><td></td><td></td></tr>
+                                    <tr><td>Explain</td><td></td><td></td><td></td></tr>
+                                    <tr><td>Apply</td><td></td><td></td><td></td></tr>
+                                    <tr><td>Evaluate</td><td></td><td></td><td></td></tr>
+                                    <tr><td>Create</td><td></td><td></td><td></td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div> 
+            </div>
+        </section>
+    </div>
+
+    <div id="noDataMessage">
+        Select <strong>+ Add Course</strong> to build from scratch, or <strong>File > Load</strong> to import an existing Excel file with the required column headers. For a full walkthrough of the app, go to <strong>File > Guide</strong>.
+    </div>
+
+    <div id="scheduleModal" class="modal-overlay">
+        <div class="modal">
+            <h2>Save Training</h2>
+            <div style="background:var(--accent-soft); border-left:3px solid var(--accent); border-radius:0 var(--radius-sm) var(--radius-sm) 0; padding:10px 14px; margin-bottom:16px; font-size:var(--text-sm); color:var(--ink-secondary); line-height:1.55;">
+                Make sure to set your <strong>Product Name</strong> and <strong>Training Program</strong> name before saving. Click the names next to the Design or Report header to edit them.
+            </div>
+            
+            <div class="modal-content">
+                <div class="time-input-group">
+                    <div class="time-input-field">
+                        <label for="Include Date & Time">Add Date & Time</label>
+                        <div class="checkbox-wrapper">
+                            <input type="checkbox" id="includeSchedule">
+                        </div>
+                    </div>
+                    <div class="time-input-field">
+                        <label for="startDate">Date</label>
+                        <input type="date" id="startDate" required>
+                    </div>
+                    <div class="time-input-field">
+                        <label for="startTime">Time</label>
+                        <input type="time" id="startTime" required>
+                    </div>
+                    <div class="time-input-field">
+                        <label for="timeZone">Time Zone</label>
+                        <select id="timeZone"></select>
+                    </div>
+                    <div class="time-input-field">
+                        <label for="includeWeekends">Include Weekends</label>
+                        <div class="checkbox-wrapper">
+                            <input type="checkbox" id="includeWeekends">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-buttons">
+                <button id="saveScheduleBtn" class="tr-orange-btn">Save</button>
+                <button id="cancelScheduleBtn" class="tr-orange-btn">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="nameEditModal" class="modal-overlay">
+        <div class="modal" style="width: 440px;">
+            <h2>Edit Names</h2>
+            <div class="name-fields">
+                <div class="name-input-field">
+                    <label for="editProductName">Product Name</label>
+                    <input type="text" id="editProductName" placeholder="Enter product name" maxlength="50">
+                </div>
+                <div class="name-input-field">
+                    <label for="editProgramName">Training Program</label>
+                    <input type="text" id="editProgramName" placeholder="Enter program name" maxlength="70">
+                </div>
+            </div>
+            <div class="modal-buttons">
+                <button id="cancelNameEditBtn" class="tr-orange-btn" style="background:var(--surface-0);color:var(--ink-secondary);border-color:var(--border-default);">Cancel</button>
+                <button id="saveNameEditBtn" class="tr-orange-btn">Save</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="startTimeModal" class="modal-overlay">
+        <div class="modal" style="width: 400px;">
+            <h2>Set Start Time</h2>
+            <div class="start-time">
+                <div class="start-time-field">
+                    <input type="time" id="newStartTime" required value="09:00">
+                </div>
+            </div>
+            <div class="modal-buttons">
+                <button id="saveStartTimeBtn" class="tr-orange-btn">Save</button>
+                <button id="cancelStartTimeBtn" class="tr-orange-btn">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="selection-tally" id="selectionTally">
+        <div class="selection-tally-count" id="tallyCount">0 SELECTED</div>
+        <div class="selection-tally-duration" id="tallyDuration">0 min</div>
+        <div class="selection-tally-hours" id="tallyHours"></div>
+    </div>
+
+    <div class="loading-overlay" style="opacity: 0">
+        <div class="loading-content">
+            Loading<span class="loading-dots"></span>
+        </div>
+    </div>
+    <script src="app.js"></script>
+</body>
+</html>

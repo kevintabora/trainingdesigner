@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Training Designer: Guide</title>
+  <link rel="icon" type="image/png" sizes="32x32" href="../icon.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Top bar -->
+  <header class="topbar">
+    <span class="topbar-icon">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
+      </svg>
+    </span>
+    <span class="topbar-logo">Training Designer</span>
+    <div class="topbar-sep"></div>
+    <span class="topbar-title">Guide</span>
+    <a href="../index.html" class="topbar-back">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M9 2L4 7L9 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      Back to app
+    </a>
+  </header>
+
+  <div class="layout">
+
+    <!-- Sidebar -->
+    <nav class="sidebar" id="sidebar">
+      <div class="sidebar-section-label">Getting Started</div>
+      <div class="nav-item active" data-panel="overview">
+        <span class="nav-icon">📋</span> Overview
+      </div>
+
+      <div class="sidebar-section-label">Building Courses</div>
+      <div class="nav-item" data-panel="creating">
+        <span class="nav-icon">➕</span> Creating a Course
+      </div>
+      <div class="nav-item" data-panel="fields">
+        <span class="nav-icon">📖</span> Field Reference
+      </div>
+
+      <div class="sidebar-section-label">Managing Your Plan</div>
+      <div class="nav-item" data-panel="managing">
+        <span class="nav-icon">📊</span> Activities &amp; Rows
+      </div>
+      <div class="nav-item" data-panel="saving">
+        <span class="nav-icon">💾</span> Saving &amp; Loading
+      </div>
+
+      <div class="sidebar-section-label">Analysis</div>
+      <div class="nav-item" data-panel="report">
+        <span class="nav-icon">📈</span> Report
+      </div>
+
+      <div class="sidebar-section-label">Excel Workflow</div>
+      <div class="nav-item" data-panel="template">
+        <span class="nav-icon">📄</span> Excel Template
+      </div>
+    </nav>
+
+    <!-- Main -->
+    <main class="main" id="mainContent">
+
+      <!-- ── OVERVIEW ──────────────────────────────────────────── -->
+      <section class="panel active" id="overview">
+        <div class="panel-eyebrow">Getting Started</div>
+        <h1 class="panel-title">Training Designer</h1>
+        <p class="panel-lead">Training Designer helps you build structured, well-organized training programs. You break each course down into focused learning activities, each tied to a specific objective, so your program has clear purpose from day one.</p>
+
+        <div class="section">
+          <div class="section-title">What you can do</div>
+          <div class="overview-grid">
+            <div class="overview-card">
+              <div class="overview-card-icon">📅</div>
+              <div class="overview-card-title">Build day-by-day</div>
+              <div class="overview-card-desc">Organize activities into training days. The app tracks totals and schedules automatically.</div>
+            </div>
+            <div class="overview-card">
+              <div class="overview-card-icon">📈</div>
+              <div class="overview-card-title">Analyze your program</div>
+              <div class="overview-card-desc">Charts and tables show how time is split across cognitive tasks, activities, delivery methods, and more.</div>
+            </div>
+            <div class="overview-card">
+              <div class="overview-card-icon">🎯</div>
+              <div class="overview-card-title">Structured objectives</div>
+              <div class="overview-card-desc">Every activity is linked to a measurable learning objective and a cognitive task level.</div>
+            </div>
+            <div class="overview-card">
+              <div class="overview-card-icon">📄</div>
+              <div class="overview-card-title">Excel-first workflow</div>
+              <div class="overview-card-desc">Prefer planning in a spreadsheet? Use the blank template, then load it right into the app.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="section">
+          <div class="section-title">How it works</div>
+          <ul class="steps">
+            <li>Click <strong>+ Add Course</strong> in the top menu to open the form. Fill in your course details and learning activities.</li>
+            <li>Click <strong>Submit</strong>. Each learning activity becomes its own row in the day table.</li>
+            <li>Edit, reorder, copy, or delete rows as your plan takes shape.</li>
+            <li>Click <strong>Report</strong> in the menu bar to jump to the Report section and see how your program breaks down.</li>
+            <li>When you're ready, go to <strong>File &rarr; Save</strong> to export everything as an Excel file.</li>
+            <li>Need help? Go to <strong>File &rarr; Guide</strong> for a full walkthrough of every feature.</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- ── CREATING A COURSE ─────────────────────────────────── -->
+      <section class="panel" id="creating">
+        <div class="panel-eyebrow">Building Courses</div>
+        <h1 class="panel-title">Creating a Course</h1>
+        <p class="panel-lead">Each time you submit the form, the app creates one or more rows in your day table. Every learning activity you define becomes its own row.</p>
+
+        <div class="section">
+          <div class="section-title">Opening the form</div>
+          <p>Click <strong>+ Add Course</strong> in the top menu bar. A form will appear where you can fill in the course details (day, unit, module) and at least one learning activity. When everything looks right, click <strong>Submit</strong>.</p>
+        </div>
+
+        <div class="section">
+          <div class="section-title">Adding multiple activities</div>
+          <p>A single course can contain several learning activities. For example, a module on "Creating a Case in Salesforce" might include a lecture, a navigation practice, and a knowledge check, each as separate activities.</p>
+          <p>Click <strong>+ Learning Activity</strong> inside the form to add more. Each one gets its own objective, cognitive task, and duration, and each one becomes a separate row in the table.</p>
+          <div class="callout"><strong>Tip:</strong> Use the drag handle (☰) next to each activity block to reorder them inside the form before you submit.</div>
+        </div>
+
+        <div class="section">
+          <div class="section-title">Editing an existing row</div>
+          <p>Click the ✏️ <strong>Edit</strong> button on any row. The form reopens with that row's data already filled in. Make your changes and submit to update it.</p>
+          <div class="callout">While you're editing, all other table actions (drag, delete, copy) are disabled. Submit or cancel the edit to re-enable them.</div>
+        </div>
+      </section>
+
+      <!-- ── FIELD REFERENCE ───────────────────────────────────── -->
+      <section class="panel" id="fields">
+        <div class="panel-eyebrow">Building Courses</div>
+        <h1 class="panel-title">Field Reference</h1>
+        <p class="panel-lead">A breakdown of every field in the Add Course form, what it means, and what to enter.</p>
+
+        <div class="card">
+          <div class="section-title">Course-level fields</div>
+          <p style="margin-bottom:12px;color:var(--ink-tertiary);font-size:var(--text-sm);">These apply to the whole course and are shared by all activities under it.</p>
+          <div class="field-row" style="padding-top:0"><span class="field-label">Day</span><span class="field-val">Which training day this course falls on. Enter a number (e.g., 1, 2, 3).</span></div>
+          <div class="field-row"><span class="field-label">Unit (Main Topic)</span><span class="field-val">The broad topic that groups related content together. Example: "Salesforce", "Print Products", "Tax Form 1065".</span></div>
+          <div class="field-row"><span class="field-label">Module (Subtopic)</span><span class="field-val">A specific subject within the unit. Example: "Creating a Case in Salesforce", "Running Meetings".</span></div>
+        </div>
+
+        <div class="card">
+          <div class="section-title">Activity-level fields</div>
+          <p style="margin-bottom:12px;color:var(--ink-tertiary);font-size:var(--text-sm);">Each learning activity has its own set of these fields.</p>
+          <div class="field-row" style="padding-top:0"><span class="field-label">Duration</span><span class="field-val">How long this activity takes, in minutes.</span></div>
+          <div class="field-row"><span class="field-label">Link <span style="font-weight:400;color:var(--ink-muted);font-size:var(--text-xs)">(optional)</span></span><span class="field-val">A URL to an external resource. If provided, it shows as a clickable link in the Media column. Must start with http:// or https://.</span></div>
+          <div class="field-row"><span class="field-label">Plan</span><span class="field-val">The intended action for this row when reviewing or updating the program. Rows marked <strong>Remove</strong> are excluded from total duration calculations.</span></div>
+          <div class="field-row"><span class="field-label">Notes <span style="font-weight:400;color:var(--ink-muted);font-size:var(--text-xs)">(optional)</span></span><span class="field-val">Any extra context that may affect delivery or future updates. Only visible in the exported Excel file.</span></div>
+        </div>
+
+        <div class="card">
+          <div class="section-title">Learning Objective</div>
+          <p>A clear, measurable statement of what learners should be able to do after completing this activity. Write it as an action. Examples:</p>
+          <ul style="margin-top:8px;">
+            <li>Verify customer identity using the two-step authentication process</li>
+            <li>Locate specific legal cases using Westlaw's search tools</li>
+            <li>Explain what common error messages mean during financial statement uploads</li>
+          </ul>
+        </div>
+
+        <div class="card">
+          <div class="section-title">Cognitive Task</div>
+          <p>The level of thinking this activity requires. These build on each other, from simple recall to complex creation.</p>
+          <div class="field-row" style="padding-top:6px"><span class="field-label">Remember</span><span class="field-val">Recall facts, rules, or steps exactly as learned. <em>Example: List the required fields on a case form.</em></span></div>
+          <div class="field-row"><span class="field-label">Explain</span><span class="field-val">Describe how something works or restate it in your own words. <em>Example: Explain why a case gets escalated.</em></span></div>
+          <div class="field-row"><span class="field-label">Apply</span><span class="field-val">Use what you've learned to complete a task in a new situation. <em>Example: Create a new case following the standard workflow.</em></span></div>
+          <div class="field-row"><span class="field-label">Evaluate</span><span class="field-val">Analyze a situation and make a judgment call. <em>Example: Decide whether to escalate or resolve a case based on its details.</em></span></div>
+          <div class="field-row"><span class="field-label">Create</span><span class="field-val">Combine concepts to develop something original. <em>Example: Design a custom workflow for handling a new case type.</em></span></div>
+        </div>
+
+        <div class="card">
+          <div class="section-title">Learner Activity</div>
+          <p>What the learner will actually be doing during this activity. Choose the one that best describes the experience.</p>
+          <div class="chips">
+            <span class="chip">Lecture Participation</span>
+            <span class="chip">Workshop</span>
+            <span class="chip">Module Interaction</span>
+            <span class="chip">Watching</span>
+            <span class="chip">Reading</span>
+            <span class="chip">Listening</span>
+            <span class="chip">Navigation Practice</span>
+            <span class="chip">Reference / Job Aids Practice</span>
+            <span class="chip">Interactive Q&amp;A</span>
+            <span class="chip">Recap / Debrief</span>
+            <span class="chip">Reflection</span>
+            <span class="chip">Live Group Discussion</span>
+            <span class="chip">Async Group Discussion</span>
+            <span class="chip">Peer Teaching</span>
+            <span class="chip">Role Play / Mock Call</span>
+            <span class="chip">Scenario-Based Exercise</span>
+            <span class="chip">Knowledge Check</span>
+            <span class="chip">Written Graded Assessment</span>
+            <span class="chip">Graded Mock Calls</span>
+            <span class="chip">Navigation Assessment</span>
+            <span class="chip">Peer Assessment</span>
+            <span class="chip">Self Assessment</span>
+            <span class="chip">Shadowing / Observation</span>
+            <span class="chip">Live Customer Practice</span>
+            <span class="chip">Mentorship / Coaching</span>
+            <span class="chip">Game</span>
+            <span class="chip">Meet &amp; Greet</span>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="section-title">Delivery Method</div>
+          <p>How the learning experience is structured and delivered to the learner.</p>
+          <div class="field-row" style="padding-top:6px"><span class="field-label">Instructor-Led</span><span class="field-val">A trainer guides the session in real time with direct interaction and feedback.</span></div>
+          <div class="field-row"><span class="field-label">Self-Paced</span><span class="field-val">Learners work through the material independently, at their own speed.</span></div>
+          <div class="field-row"><span class="field-label">On-the-Job Training</span><span class="field-val">Learning happens through supervised practice in actual work situations.</span></div>
+          <div class="field-row"><span class="field-label">Microlearning</span><span class="field-val">Short, focused lessons designed to be completed quickly and applied right away.</span></div>
+        </div>
+
+        <div class="card">
+          <div class="section-title">Content Type</div>
+          <p>What kind of knowledge or skill this activity covers. The type affects how it maps against cognitive tasks in the report.</p>
+          <div class="field-row" style="padding-top:6px">
+            <span class="field-label">Facts / Concepts <span class="stag" style="font-size:9px;padding:1px 6px;">Info</span></span>
+            <span class="field-val">Foundational knowledge that needs to be remembered and understood.</span>
+          </div>
+          <div class="field-row">
+            <span class="field-label">Workflows <span class="stag" style="font-size:9px;padding:1px 6px;">Info</span></span>
+            <span class="field-val">Multi-step processes that show how tasks or roles connect end-to-end.</span>
+          </div>
+          <div class="field-row">
+            <span class="field-label">Software / Tools <span class="stag" style="font-size:9px;padding:1px 6px;">Procedural</span></span>
+            <span class="field-val">Step-by-step instructions for using a specific application or tool.</span>
+          </div>
+          <div class="field-row">
+            <span class="field-label">Customer Service <span class="stag" style="font-size:9px;padding:1px 6px;">Procedural</span></span>
+            <span class="field-val">Standard protocols for handling customer interactions consistently.</span>
+          </div>
+          <div class="field-row">
+            <span class="field-label">Software / Tools <span class="stag" style="font-size:9px;padding:1px 6px;">Problem-Solving</span></span>
+            <span class="field-val">Troubleshooting principles for diagnosing and fixing technical issues.</span>
+          </div>
+          <div class="field-row">
+            <span class="field-label">Customer Service <span class="stag" style="font-size:9px;padding:1px 6px;">Problem-Solving</span></span>
+            <span class="field-val">Strategies for handling unique or complex customer situations.</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- ── MANAGING ───────────────────────────────────────────── -->
+      <section class="panel" id="managing">
+        <div class="panel-eyebrow">Managing Your Plan</div>
+        <h1 class="panel-title">Activities &amp; Rows</h1>
+        <p class="panel-lead">Every submitted activity becomes a row in the day table. You can edit, reorder, duplicate, or remove any row at any time.</p>
+
+        <div class="card">
+          <div class="section-title">Row action buttons</div>
+          <p style="margin-bottom:10px;color:var(--ink-tertiary);font-size:var(--text-sm);">Each row has four action buttons on the right side.</p>
+          <div class="field-row" style="padding-top:0"><span class="field-label">✏️ Edit</span><span class="field-val">Reopens the form with this row's data so you can modify any field.</span></div>
+          <div class="field-row"><span class="field-label">📋 Copy</span><span class="field-val">Creates an exact duplicate of the row directly below it.</span></div>
+          <div class="field-row"><span class="field-label">🗑️ Delete</span><span class="field-val">Permanently removes the row from your training plan.</span></div>
+          <div class="field-row"><span class="field-label">☰ Drag</span><span class="field-val">Click and hold to move a row up or down within its day, or drag it into a different day's table.</span></div>
+        </div>
+
+        <div class="card">
+          <div class="section-title">Selecting rows &amp; bulk actions</div>
+          <p>Use the checkbox on any row to select it. You can also check the box in the day header to select every row in that day at once.</p>
+          <p>Once rows are selected, a <strong>Manage Selected</strong> dropdown appears in the menu bar with these options:</p>
+          <div class="chips" style="margin-top:10px;">
+            <span class="chip">Copy Selected</span>
+            <span class="chip">Move Selected</span>
+            <span class="chip">Delete Selected</span>
+          </div>
+          <div class="callout" style="margin-top:12px;">While rows are selected, individual row actions (edit, copy, delete, drag) and the Add Course button are disabled. Deselect all rows to re-enable them.</div>
+        </div>
+
+        <div class="card">
+          <div class="section-title">Table visual indicators</div>
+          <div class="field-row" style="padding-top:0"><span class="field-label">Dashed line</span><span class="field-val">Activities that share the same unit and module are grouped together with dashed borders between them.</span></div>
+          <div class="field-row"><span class="field-label">Solid line</span><span class="field-val">A solid border marks where one course group ends and another begins.</span></div>
+          <div class="field-row"><span class="field-label">Gray row</span><span class="field-val">A scheduled break. Break rows can be edited (to change duration), copied, deleted, and dragged just like regular rows.</span></div>
+        </div>
+
+        <div class="card">
+          <div class="section-title">Breaks</div>
+          <p>Click <strong>+ Add Break</strong> below any day table to insert a break row. You'll be asked for the duration in minutes. Breaks can be repositioned by dragging.</p>
+          <p>Use <strong>Hide Breaks</strong> in the menu to temporarily collapse all break rows from view. Use <strong>Delete Breaks</strong> to remove them all at once.</p>
+        </div>
+
+        <div class="card">
+          <div class="section-title">Total Duration</div>
+          <p>Shown at the bottom of each day table. This is the sum of all activity durations for that day, displayed as both minutes and decimal hours (e.g., <em>240 min | 4 hrs</em>). Rows with the Plan set to <strong>Remove</strong> are automatically excluded from this total.</p>
+        </div>
+
+        <div class="card">
+          <div class="section-title">Undo</div>
+          <p>The <strong>↺</strong> button in the top menu bar lets you undo the last action. You can also press <strong>Ctrl+Z</strong> (or Cmd+Z on Mac). The app keeps up to 20 levels of undo history.</p>
+          <p>Undo covers: adding, editing, or deleting activities, copying or moving rows, reordering via drag-and-drop, adding or deleting breaks, changing start time, editing product/program names, resetting, and loading a file.</p>
+          <div class="callout">Undo is disabled while you're adding or editing a course. Submit or cancel the form first.</div>
+        </div>
+
+        <div class="card">
+          <div class="section-title">Selection tally</div>
+          <p>When you select rows using checkboxes, a floating counter appears on the right side of the screen showing the total number of selected rows and their combined duration in minutes and hours. Rows marked as <strong>Remove</strong> in the Plan column are excluded from the duration total.</p>
+        </div>
+      </section>
+
+      <!-- ── SAVING ────────────────────────────────────────────── -->
+      <section class="panel" id="saving">
+        <div class="panel-eyebrow">Managing Your Plan</div>
+        <h1 class="panel-title">Saving &amp; Loading</h1>
+        <p class="panel-lead">Export your training plan as a structured Excel file, or load a previously saved file to pick up where you left off.</p>
+
+        <div class="card">
+          <div class="section-title">How to save</div>
+          <p>Go to <strong>File &rarr; Save</strong> in the top menu. The save dialog lets you optionally include a date, time, and time zone in the exported file.</p>
+          <p>Before saving, make sure to set your <strong>Product Name</strong> and <strong>Training Program</strong> name. You can do this by clicking the name text next to the <strong>Design</strong> or <strong>Report</strong> header. A modal will appear where you can enter or update both names. You can save without names, but the Excel fields will be empty.</p>
+          <div class="field-row" style="margin-top:10px;padding-top:0"><span class="field-label">Add Date &amp; Time</span><span class="field-val">Check this box to include a start date, time, and time zone in your exported file. Useful if your team needs a concrete schedule.</span></div>
+        </div>
+
+        <div class="card">
+          <div class="section-title">File naming</div>
+          <p>File names are generated automatically based on your product name, program name, and a UTC timestamp. This keeps your files organized and easy to track across versions.</p>
+          <code class="mono">Customer_Service__Engage_Connect__20250218_1324Z.xlsx</code>
+          <div class="callout callout-warn"><strong>Important:</strong> Don't rename files manually. The naming convention is designed for version control, and changing it can make it harder to identify the current version.</div>
+        </div>
+
+        <div class="card">
+          <div class="section-title">Product and program names</div>
+          <p>Your product and program names appear next to the <strong>Design</strong> and <strong>Report</strong> headers. Click them at any time to open the edit modal and update the names. When no names are set, a placeholder <em>Product Name: Training Program</em> is shown.</p>
+          <p>When you load a file, any names stored in the Excel are imported automatically. If the file has no names, the placeholder appears and you can set them by clicking.</p>
+          <p>Name changes are covered by <strong>undo</strong>, so you can revert them if needed.</p>
+        </div>
+
+        <div class="card">
+          <div class="section-title">Loading a file</div>
+          <p>Go to <strong>File &rarr; Load</strong> and select a previously saved <kbd>.xlsx</kbd> file. The app reads the data and rebuilds your day tables, charts, and reports automatically.</p>
+          <div class="callout callout-warn">Loading a file replaces everything currently in the app. Make sure to save your current work first if you haven't already.</div>
+        </div>
+      </section>
+
+      <!-- ── REPORT ────────────────────────────────────────────── -->
+      <section class="panel" id="report">
+        <div class="panel-eyebrow">Analysis</div>
+        <h1 class="panel-title">Report</h1>
+        <p class="panel-lead">A detailed breakdown of your training program that helps you spot patterns, imbalances, and opportunities to improve your design.</p>
+
+        <div class="card">
+          <div class="section-title">Getting there</div>
+          <p>Click the <strong>Report ↓</strong> button in the top menu to jump straight to the Report section. Once you're there, the button changes to <strong>Design ↑</strong> to bring you back to the day tables.</p>
+        </div>
+
+        <div class="card">
+          <div class="section-title">Numerical tables</div>
+          <p>Each report category (Cognitive Task, Learner Activity, Delivery Method, Media, Content Type) gets its own table showing:</p>
+          <div class="field-row" style="margin-top:8px;padding-top:0"><span class="field-label">Count</span><span class="field-val">How many activities use that category.</span></div>
+          <div class="field-row"><span class="field-label">Duration</span><span class="field-val">Total minutes spent on that category.</span></div>
+          <div class="field-row"><span class="field-label">Time %</span><span class="field-val">What percentage of total program time it represents.</span></div>
+          <p style="margin-top:10px;">Click <strong>Show Days</strong> above any table to filter by specific training days for a more focused view.</p>
+        </div>
+
+        <div class="card">
+          <div class="section-title">Donut charts</div>
+          <p>A quick visual snapshot of how time is distributed across each category. The center shows the dominant category and its percentage. Hover over any slice for details. Useful for spotting when one category dominates or another is underrepresented.</p>
+        </div>
+
+        <div class="card">
+          <div class="section-title">Line charts</div>
+          <p>These appear automatically when your program spans multiple days. The X-axis shows training days and the Y-axis shows minutes per category per day.</p>
+          <p>Use these to see how emphasis shifts over time. For example, you might check whether cognitive complexity increases as the program progresses, or whether instructor-led time tapers off as learners gain independence.</p>
+        </div>
+
+        <div class="card">
+          <div class="section-title">Content Type vs. Cognitive Tasks</div>
+          <p>A cross-reference table at the bottom of the report. It shows how your content types (Information, Procedural, Problem-Solving) map against each cognitive task level (Remember through Create). This helps you confirm that your program challenges learners appropriately across different types of content.</p>
+        </div>
+      </section>
+
+      <!-- ── TEMPLATE ──────────────────────────────────────────── -->
+      <section class="panel" id="template">
+        <div class="panel-eyebrow">Excel Workflow</div>
+        <h1 class="panel-title">Excel Template</h1>
+        <p class="panel-lead">If you prefer to plan in Excel first, download the blank template. It comes with dropdown menus already built into the key columns, so your data stays compatible with the app.</p>
+
+        <div class="card">
+          <div class="section-title">Columns with dropdown validation</div>
+          <p>These columns have built-in list validation to keep your entries consistent when you load the file into Training Designer:</p>
+          <div class="chips" style="margin-top:10px;">
+            <span class="chip">Cognitive Task</span>
+            <span class="chip">Learner Activity</span>
+            <span class="chip">Delivery Method</span>
+            <span class="chip">Media</span>
+            <span class="chip">Type of Content</span>
+            <span class="chip">Plan</span>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="section-title">Loading your Excel file into the app</div>
+          <ul class="steps">
+            <li>Fill in the template in Excel. Each row represents one learning activity.</li>
+            <li>Save the file. Keep the column headers exactly as they are.</li>
+            <li>In Training Designer, go to <strong>File &rarr; Load</strong> and select your file.</li>
+            <li>The app reads your data and generates day tables, reports, and charts automatically.</li>
+          </ul>
+          <div class="callout callout-warn" style="margin-top:8px;"><strong>Important:</strong> Do not rename, reorder, or delete any column headers. The load function maps your data by matching header names exactly.</div>
+        </div>
+
+        <div class="card">
+          <div class="section-title">Download the template</div>
+          <p>Get the blank Excel template with all columns and dropdown validation ready to use.</p>
+          <p style="margin-top:12px;">
+            <a href="Training Designer Blank Template.xlsx" download="Training Designer Blank Template.xlsx" id="downloadTemplateLink" style="display:inline-flex;align-items:center;gap:6px;background:var(--ink-primary);color:var(--surface-0);padding:10px 20px;border-radius:var(--radius-sm);text-decoration:none;font-size:var(--text-sm);font-weight:600;transition:all 0.15s;box-shadow:var(--shadow-sm);" onmouseover="this.style.background='var(--ink-secondary)';this.style.transform='translateY(-1px)'" onmouseout="this.style.background='var(--ink-primary)';this.style.transform='translateY(0)'">
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 1v9M3 7l4 4 4-4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M1 12h12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+              Download Template
+            </a>
+          </p>
+          <p style="margin-top:10px; font-size:var(--text-xs); color:var(--ink-muted);">You can also download this from within the app via <strong>File &rarr; Template</strong>.</p>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <button class="mobile-nav-toggle" id="mobileNavToggle" aria-label="Toggle navigation">☰</button>
+
+  <script src="app.js"></script>
+</body>
+</html>
