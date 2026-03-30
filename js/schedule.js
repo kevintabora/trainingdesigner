@@ -121,6 +121,8 @@
                     return; // Return early to prevent further processing
                 }
 
+                showSavingOverlay();
+
                 const wb = XLSX.utils.book_new();
                 const ws_data = [];
 
@@ -274,6 +276,7 @@
                     showDialog({type:'danger', title:'Schedule Error', message:'Something went wrong: ' + err.message});
                 }
             } finally {
+                hideSavingOverlay();
                 isFilePickerActive = false; // Always reset the flag when done
             }
         }

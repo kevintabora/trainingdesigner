@@ -78,6 +78,14 @@
             ).join('');
         }
 
+        function showSavingOverlay() {
+            document.getElementById('savingOverlay').style.display = 'flex';
+        }
+
+        function hideSavingOverlay() {
+            document.getElementById('savingOverlay').style.display = 'none';
+        }
+
         function toggleModalScrollLock(isLocked) {
             if (isLocked) {
                 document.body.style.overflow = 'hidden';
