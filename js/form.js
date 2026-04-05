@@ -592,11 +592,11 @@
                     </div>
                     <div class="form-group">
                         ${createSelectField('cognitiveTask', 'Cognitive Task', options.cognitiveTasks, activity.cognitiveTask)}
-                        ${createSelectField('learnerActivity', 'Learner Activity', options.learnerActivities, activity.learnerActivity)}
+                        ${createGroupedSelectHTML('learnerActivity', 'Learner Activity', LEARNER_ACTIVITY_GROUPS, activity.learnerActivity)}
                         ${createSelectField('deliveryMethod', 'Delivery Method', options.deliveryMethods, activity.deliveryMethod)}
                     </div>
                     <div class="form-group">
-                        ${createSelectField('media', 'Media', options.mediaOptions, activity.media)}
+                        ${createGroupedSelectHTML('media', 'Media', MEDIA_GROUPS, activity.media)}
                         ${createSelectField('contentType', 'Content Type', options.contentTypes, activity.contentType)}
                         ${createInputField('duration', 'number', 'Duration (minutes)', activity.duration)}
                     </div>
@@ -637,6 +637,23 @@
             `;
         }
 
+        function createGroupedSelectHTML(className, label, groups, selectedValue = '') {
+            const optgroupsHTML = groups.map(group => `
+                <optgroup label="${group.label}">
+                    ${group.activities.map(activity => `
+                        <option value="${activity}" ${activity === selectedValue ? 'selected' : ''}>${activity}</option>
+                    `).join('')}
+                </optgroup>
+            `).join('');
+            return `
+                <label>${label}
+                    <select class="${className}">
+                        ${optgroupsHTML}
+                    </select>
+                </label>
+            `;
+        }
+
         function initializeDropdowns() {
             if (!options) {
                 console.error('Options object is undefined');
@@ -664,7 +681,35 @@
                     optionList = options.contentTypes;
                 }
 
-                if (optionList) {
+                if (className.includes('learnerActivity')) {
+                    select.innerHTML = '';
+                    LEARNER_ACTIVITY_GROUPS.forEach(group => {
+                        const optgroup = document.createElement('optgroup');
+                        optgroup.label = group.label;
+                        group.activities.forEach(activity => {
+                            const opt = document.createElement('option');
+                            opt.value = activity;
+                            opt.textContent = activity;
+                            if (activity === selectedValue) opt.selected = true;
+                            optgroup.appendChild(opt);
+                        });
+                        select.appendChild(optgroup);
+                    });
+                } else if (className.includes('media')) {
+                    select.innerHTML = '';
+                    MEDIA_GROUPS.forEach(group => {
+                        const optgroup = document.createElement('optgroup');
+                        optgroup.label = group.label;
+                        group.activities.forEach(activity => {
+                            const opt = document.createElement('option');
+                            opt.value = activity;
+                            opt.textContent = activity;
+                            if (activity === selectedValue) opt.selected = true;
+                            optgroup.appendChild(opt);
+                        });
+                        select.appendChild(optgroup);
+                    });
+                } else if (optionList) {
                     select.innerHTML = optionList.map(opt => `
                         <option ${opt === selectedValue ? 'selected' : ''}>${opt}</option>
                     `).join('');

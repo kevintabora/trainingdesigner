@@ -484,18 +484,18 @@
                 content: aggregateLineData('contentType', days)
             };
 
-            // Update numerical tables (unchanged)
-            updateNumericalTable('cognitiveTable', reportData.cognitive);
-            updateNumericalTable('activityTable', reportData.activity);
-            updateNumericalTable('deliveryTable', reportData.delivery);
-            updateNumericalTable('mediaTable', reportData.media);
-            updateNumericalTable('contentTable', reportData.content);
+            // Update numerical tables
+            updateNumericalTable('cognitiveTable', reportData.cognitive, { labelHeader: 'Task' });
+            updateNumericalTable('activityTable', reportData.activity, { showGroup: true, groupLookupFn: getActivityGroup, labelHeader: 'Activity' });
+            updateNumericalTable('deliveryTable', reportData.delivery, { labelHeader: 'Method' });
+            updateNumericalTable('mediaTable', reportData.media, { showGroup: true, groupLookupFn: getMediaGroup, labelHeader: 'Media' });
+            updateNumericalTable('contentTable', reportData.content, { labelHeader: 'Type' });
 
             // Update pie charts (unchanged)
             updateChart('cognitivePieChart', reportData.cognitive);
-            updateChart('activityPieChart', reportData.activity);
+            updateChartWithGroupColors('activityPieChart', aggregateByGroup('learnerActivity', LEARNER_ACTIVITY_GROUPS), LEARNER_ACTIVITY_GROUPS);
             updateChart('deliveryPieChart', reportData.delivery);
-            updateChart('mediaPieChart', reportData.media);
+            updateChartWithGroupColors('mediaPieChart', aggregateByGroup('media', MEDIA_GROUPS), MEDIA_GROUPS);
             updateChart('contentPieChart', reportData.content);
 
             // Handle line chart containers visibility
@@ -531,27 +531,37 @@
         }
 
 
-        function updateNumericalTable(tableId, data) {
+        function updateNumericalTable(tableId, data, opts) {
+            opts = opts || {};
+            var showGroup = opts.showGroup || false;
+            var groupLookupFn = opts.groupLookupFn || null;
+            var labelHeader = opts.labelHeader || 'Category';
+
             const table = document.getElementById(tableId);
-            // Sort labels by duration descending
             const sorted = data.labels
                 .map((label, i) => ({ label, value: data.values[i] }))
                 .sort((a, b) => b.value - a.value);
+
             table.innerHTML = `
                 <tr>
-                    <th>Category</th>
+                    ${showGroup ? '<th>Group</th>' : ''}
+                    <th>${labelHeader}</th>
                     <th>Count</th>
                     <th>Duration</th>
                     <th>Time %</th>
                 </tr>
-                ${sorted.map(({ label, value }) => `
-                    <tr>
-                        <td>${label}</td>
-                        <td>${data.counts[label]}</td>
-                        <td>${value} mins</td>
-                        <td>${((value / data.total) * 100).toFixed(1)}%</td>
-                    </tr>
-                `).join('')}
+                ${sorted.map(({ label, value }) => {
+                    const group = showGroup && groupLookupFn ? groupLookupFn(label) : null;
+                    return `
+                        <tr>
+                            ${showGroup ? `<td>${group ? group.label : ''}</td>` : ''}
+                            <td>${label}</td>
+                            <td>${data.counts[label]}</td>
+                            <td>${value} mins</td>
+                            <td>${((value / data.total) * 100).toFixed(1)}%</td>
+                        </tr>
+                    `;
+                }).join('')}
             `;
         }
 
@@ -575,6 +585,84 @@
                 counts: counts, // New property for occurrence counts
                 total: total,
             };
+        }
+
+        function aggregateByGroup(field, groups) {
+            const groupTotals = {};
+            const groupCounts = {};
+            let total = 0;
+
+            activities
+                .filter(a => !a.isBreak && a.plan !== 'Remove')
+                .forEach(activity => {
+                    const value = activity[field];
+                    let groupLabel = null;
+                    for (const group of groups) {
+                        if (group.activities.includes(value)) {
+                            groupLabel = group.label;
+                            break;
+                        }
+                    }
+                    if (!groupLabel) return;
+                    groupTotals[groupLabel] = (groupTotals[groupLabel] || 0) + activity.duration;
+                    groupCounts[groupLabel] = (groupCounts[groupLabel] || 0) + 1;
+                    total += activity.duration;
+                });
+
+            const result = { labels: [], values: [], counts: {}, total };
+            groups.forEach(group => {
+                if (groupTotals[group.label] !== undefined) {
+                    result.labels.push(group.label);
+                    result.values.push(groupTotals[group.label]);
+                    result.counts[group.label] = groupCounts[group.label] || 0;
+                }
+            });
+            return result;
+        }
+
+        function updateChartWithGroupColors(chartId, data, groups) {
+            const ctx = document.getElementById(chartId).getContext('2d');
+            if (charts[chartId]) charts[chartId].destroy();
+
+            const colorMap = {};
+            groups.forEach(g => { colorMap[g.label] = g.chartColor; });
+            const colors = data.labels.map(label => colorMap[label] || '#888780');
+
+            charts[chartId] = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: data.labels,
+                    datasets: [{
+                        data: data.values,
+                        backgroundColor: colors,
+                        borderColor: '#fff',
+                        borderWidth: 2,
+                    }],
+                },
+                options: {
+                    maintainAspectRatio: false,
+                    cutout: '50%',
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                            labels: {
+                                font: { family: "'Plus Jakarta Sans', Clario, sans-serif", size: 12 },
+                                boxWidth: 14,
+                                padding: 10,
+                            },
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: (ctx) => {
+                                    const value = ctx.parsed;
+                                    const pct = ((value / data.total) * 100).toFixed(1);
+                                    return ` ${value} mins (${pct}%)`;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
         }
 
         function aggregateLineData(field, days, filteredActivities = activities) {

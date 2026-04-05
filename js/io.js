@@ -48,7 +48,7 @@
                 const headers = [
                     'Product', 'Program', 'Day', 'Day Order', 'Unit (Main Topic)', 'Module (Subtopic)',
                     'Learning Objective', 'Cognitive Task', 'Learner Activity', 'Delivery Method',
-                    'Media', 'Type of Content', 'Duration', 'Link', 'Plan', 'Notes'
+                    'Media', 'Content Type', 'Duration', 'Link', 'Plan', 'Notes'
                 ];
                 ws_data.push(headers);
 
@@ -94,7 +94,7 @@
                     'K': 'Content Types'
                 };
                 const optionsData = [
-                    ['Cognitive Tasks', 'Learner Activity', 'Delivery Methods', 'Media', 'Type of Content', 'Plan'],
+                    ['Cognitive Task', 'Learner Activity', 'Delivery Method', 'Media', 'Content Type', 'Plan'],
                     ...Array.from({ length: Math.max(
                         options.cognitiveTasks.length,
                         options.learnerActivities.length,

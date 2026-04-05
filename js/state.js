@@ -8,33 +8,39 @@
             ],
             learnerActivities: [
                 'Lecture Participation',
-                'Workshop',
-                'Module Interaction',
-                'Watching',
+                'Video / Recording Review',
                 'Reading',
-                'Listening',
-                'Navigation Practice',
-                'Documentation Practice',
-                'Reference/ Job Aids Practice',
-                'Interactive Q&A',
-                'Recap/ Debrief',
+                'Podcast / Audio Review',
+                'eLearning - Read, Watch, Listen',
+                'eLearning - Interactive',
+                'Q&A with Instructor / Expert',
+                'Recap & Debrief',
                 'Reflection',
+                'Facilitated Group Activity',
+                'Concept Mapping / Mind Mapping',
+                'Pre-Training / Advance Organizer',
+                'Worked Example Review',
+                'eLearning - Simulate & Practice',
+                'Software / Tool Practice',
+                'Documentation Practice',
+                'Job Aid & Reference Lookup Practice',
+                'Shadowing & Job Observation',
+                'Role Play / Mock Conversation',
+                'Scenario-Based Exercise',
                 'Live Group Discussion',
                 'Asynchronous Group Discussion',
                 'Peer Teaching',
-                'Role Play/ Mock Call Exercise',
-                'Scenario-Based Exercise',
-                'Knowledge Check',
-                'Written Graded Assessment',
-                'Graded Mock Calls',
-                'Navigation Assessment',
-                'Peer Assessment',
-                'Self Assessment',
-                'Shadowing/ Observation',
                 'Live Customer Practice',
-                'Mentorship/ Coaching',
-                'Game',
-                'Meet & Greet'
+                'Mentorship / Coaching',
+                'Knowledge Check',
+                'Self Assessment',
+                'Peer Assessment',
+                'Procedural Skills Assessment',
+                'Written Graded Assessment',
+                'Graded Practice Conversation',
+                'Meet & Greet',
+                'Ice Breaker',
+                'Learning Game'
             ],
             deliveryMethods: [
                 'Instructor-Led',
@@ -43,31 +49,31 @@
                 'Microlearning'
             ],
             mediaOptions: [
-                'Slideshow',
-                'eLearning',
                 'Text Document',
                 'Spreadsheet',
-                'Activity Sheets',
-                'Web Article',
-                'Graphics',
-                'Audio Recording/ Podcast',
+                'Activity Sheet / Workbook',
+                'Online Article / Web Page',
+                'Slideshow',
+                'Infographic / Visual Aid',
+                'Audio Recording / Podcast',
                 'Recorded Lecture',
                 'Produced Instructional Video',
-                'Quiz/ Survey',
-                'Tool/ Software',
+                'eLearning Module',
+                'Quiz / Survey',
+                'Live System / Application',
+                'Digital Workspace / Notebook',
                 'Collaborative Platform',
                 'Discussion Channel',
-                'Online Notebook',
-                'Subject Matter Expert',
-                'VR/AR'
+                'Guest Speaker / SME Session',
+                'VR / AR'
             ],
             contentTypes: [
-                'Facts/ Concepts',
-                'Workflow - Operations/ Admin/ Support',
-                'Procedural - Software/ Tools',
-                'Procedural - Customer Service',
-                'Problem-Solving - Software/ Tools',
-                'Problem-Solving - Customer Service'
+                'Facts / Concepts',
+                'Workflow - Operations / Admin / Support',
+                'Procedural - Software / Tools',
+                'Procedural - Communication Skills',
+                'Problem-Solving - Software / Tools',
+                'Problem-Solving - Communication Skills'
             ],
             planOptions: [
                 'Keep',
@@ -81,6 +87,38 @@
                 'New Addition'
             ],
         };
+
+        const LEARNER_ACTIVITY_GROUPS = [
+            { id: 'receptive',       label: 'Receptive Instruction',     chartColor: '#1A6FB5', activities: ['Lecture Participation','Video / Recording Review','Reading','Podcast / Audio Review','eLearning - Read, Watch, Listen'] },
+            { id: 'generative',      label: 'Generative Processing',     chartColor: '#0F8A5F', activities: ['eLearning - Interactive','Q&A with Instructor / Expert','Recap & Debrief','Reflection','Facilitated Group Activity','Concept Mapping / Mind Mapping','Pre-Training / Advance Organizer'] },
+            { id: 'guided-practice', label: 'Guided Practice',           chartColor: '#C47A00', activities: ['Worked Example Review','eLearning - Simulate & Practice','Software / Tool Practice','Documentation Practice','Job Aid & Reference Lookup Practice','Shadowing & Job Observation'] },
+            { id: 'applied-social',  label: 'Applied & Social Learning', chartColor: '#B03A2E', activities: ['Role Play / Mock Conversation','Scenario-Based Exercise','Live Group Discussion','Asynchronous Group Discussion','Peer Teaching','Live Customer Practice','Mentorship / Coaching'] },
+            { id: 'assessment',      label: 'Assessment',                chartColor: '#6C3483', activities: ['Knowledge Check','Self Assessment','Peer Assessment','Procedural Skills Assessment','Written Graded Assessment','Graded Practice Conversation'] },
+            { id: 'engagement',      label: 'Engagement & Motivation',   chartColor: '#1E7A4A', activities: ['Meet & Greet', 'Ice Breaker', 'Learning Game'] },
+        ];
+
+        const MEDIA_GROUPS = [
+            { id: 'document',          label: 'Documents & Text',       chartColor: '#1A6FB5', activities: ['Text Document','Spreadsheet','Activity Sheet / Workbook','Online Article / Web Page'] },
+            { id: 'visual',            label: 'Visual Presentation',    chartColor: '#C47A00', activities: ['Slideshow','Infographic / Visual Aid'] },
+            { id: 'audio-video',       label: 'Audio & Video',          chartColor: '#B03A2E', activities: ['Audio Recording / Podcast','Recorded Lecture','Produced Instructional Video'] },
+            { id: 'interactive',       label: 'Interactive Digital',    chartColor: '#0F8A5F', activities: ['eLearning Module','Quiz / Survey','Live System / Application','Digital Workspace / Notebook'] },
+            { id: 'collaborative',     label: 'Collaborative & Social', chartColor: '#6C3483', activities: ['Collaborative Platform','Discussion Channel'] },
+            { id: 'live-experiential', label: 'Live & Experiential',    chartColor: '#1E7A4A', activities: ['Guest Speaker / SME Session','VR / AR'] },
+        ];
+
+        function getActivityGroup(activityName) {
+            for (const group of LEARNER_ACTIVITY_GROUPS) {
+                if (group.activities.includes(activityName)) return group;
+            }
+            return null;
+        }
+
+        function getMediaGroup(mediaName) {
+            for (const group of MEDIA_GROUPS) {
+                if (group.activities.includes(mediaName)) return group;
+            }
+            return null;
+        }
 
         let activities = [];
 
