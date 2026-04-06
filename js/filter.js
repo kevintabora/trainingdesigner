@@ -196,6 +196,11 @@
             if (!container) return;
             container.innerHTML = '';
 
+            // Wrapper isolates group containers from the parent chip-grid's gap
+            const wrapper = document.createElement('div');
+            wrapper.className = 'filter-chip-grouped-list';
+            container.appendChild(wrapper);
+
             groups.forEach(group => {
                 // Items in this group, ordered by optionsList sequence
                 const groupItems = optionsList.filter(opt => group.activities.includes(opt));
@@ -203,6 +208,7 @@
 
                 const groupContainer = document.createElement('div');
                 groupContainer.className = 'filter-chip-group-container';
+                groupContainer.style.setProperty('--group-color', group.chartColor);
 
                 // Group header chip
                 const groupChip = document.createElement('span');
@@ -210,6 +216,15 @@
                 groupChip.dataset.isGroup = 'true';
                 groupChip.textContent = group.label;
                 groupChip.style.setProperty('--group-color', group.chartColor);
+
+                const groupLabel = document.createElement('span');
+                groupLabel.className = 'filter-chip-group-header-label';
+                groupLabel.textContent = 'group';
+
+                const headerRow = document.createElement('div');
+                headerRow.className = 'filter-chip-group-header';
+                headerRow.appendChild(groupChip);
+                headerRow.appendChild(groupLabel);
 
                 // Items row
                 const itemsRow = document.createElement('div');
@@ -231,17 +246,16 @@
                     groupChip.classList.toggle('selected', allSelected);
                 };
 
-                // Set initial group chip state
                 syncGroupChip();
 
                 // Group chip click → toggle all items
                 groupChip.addEventListener('click', () => {
                     const allSelected = itemChips.every(c => c.classList.contains('selected'));
                     itemChips.forEach(c => c.classList.toggle('selected', !allSelected));
-                    groupChip.classList.toggle('selected', !allSelected);
+                    syncGroupChip();
                 });
 
-                // Item chip click → toggle, then sync group
+                // Item chip click → toggle, then sync group chip
                 itemChips.forEach(chip => {
                     chip.addEventListener('click', () => {
                         chip.classList.toggle('selected');
@@ -249,13 +263,9 @@
                     });
                 });
 
-                const headerRow = document.createElement('div');
-                headerRow.className = 'filter-chip-group-header';
-                headerRow.appendChild(groupChip);
-
                 groupContainer.appendChild(headerRow);
                 groupContainer.appendChild(itemsRow);
-                container.appendChild(groupContainer);
+                wrapper.appendChild(groupContainer);
             });
         }
 
