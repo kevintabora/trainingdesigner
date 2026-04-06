@@ -589,7 +589,7 @@
                 <div class="learning-activity" data-index="${index}">
                     <span class="activity-drag-handle" title="Reorder">☰</span>
                     <h3>Learning Activity${isEditing ? '' : ` #${index}`}</h3>
-                    <button class="delete-activity-btn" style="display: ${index === 1 ? 'none' : 'block'}">×</button>
+                    <button class="delete-activity-btn" style="display: ${index === 1 ? 'none' : 'flex'}" title="Remove activity"><svg width="10" height="10" viewBox="0 0 10 10" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><line x1="1" y1="1" x2="9" y2="9" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"/><line x1="9" y1="1" x2="1" y2="9" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"/></svg></button>
                     <div class="form-group">
                         <div class="form-group-full">
                             ${createInputField('objective', 'text', 'Learning Objective', activity.objective, 'e.g., Identify key features of the application')}

@@ -749,9 +749,9 @@
             border: 1px solid var(--border-default);
             width: 28px;
             height: 28px;
-            border-radius: 50%;
+            border-radius: 6px;
             cursor: pointer;
-            font-size: var(--text-md);
+            font-size: 16px;
             transition: all var(--duration-fast) ease;
             display: flex;
             align-items: center;
