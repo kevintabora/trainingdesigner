@@ -123,25 +123,22 @@
 
                 showSavingOverlay();
 
-                const wb = XLSX.utils.book_new();
-                const ws_data = [];
+                const wb = new ExcelJS.Workbook();
+                const ws = wb.addWorksheet('Schedule');
 
-                // Headers with "Day Order"
-                const headers = [
+                // Headers
+                ws.addRow([
                     'Product', 'Program', 'Day', 'Day Order', 'Unit (Main Topic)', 'Module (Subtopic)',
                     'Learning Objective', 'Cognitive Task', 'Learner Activity', 'Delivery Method',
                     'Media', 'Type of Content', 'Duration', 'Link', 'Plan', 'Notes',
                     `Start Time (${location})`, `End Time (${location})`, 'Time Zone Offset'
-                ];
-                ws_data.push(headers);
+                ]);
 
-                function dateToExcelSerial(dateStr, timeStr) {
+                function dateToExcelDate(dateStr, timeStr) {
                     const [hours, minutes] = timeStr.split(':').map(Number);
                     const date = new Date(dateStr);
                     date.setHours(hours, minutes, 0, 0);
-                    const excelEpoch = new Date(1899, 11, 30);
-                    const msPerDay = 24 * 60 * 60 * 1000;
-                    return (date - excelEpoch) / msPerDay;
+                    return date;
                 }
 
                 const groupedByDay = {};
@@ -174,23 +171,23 @@
 
                     groupedByDay[day].forEach((activity, orderIndex) => {
                         const timeZoneOffset = getTimeZoneOffset(timeZone);
-                        let startSerial, endSerial;
+                        let startVal, endVal;
 
                         if (activity.plan === 'Remove') {
-                            startSerial = '--:--';
-                            endSerial = '--:--';
+                            startVal = '--:--';
+                            endVal = '--:--';
                         } else {
-                            startSerial = dateToExcelSerial(formattedDate, currentTime);
+                            startVal = dateToExcelDate(formattedDate, currentTime);
                             const endTime = calculateTime(currentTime, activity.duration);
-                            endSerial = dateToExcelSerial(formattedDate, endTime);
+                            endVal = dateToExcelDate(formattedDate, endTime);
                             currentTime = endTime;
                         }
 
-                        ws_data.push([
+                        const row = ws.addRow([
                             productName,
                             programName,
                             Number(activity.day),
-                            orderIndex + 1, // Day Order
+                            orderIndex + 1,
                             activity.chapter,
                             activity.moduleTitle,
                             activity.objective,
@@ -203,65 +200,44 @@
                             activity.link || '',
                             activity.isBreak ? 'Keep' : (activity.plan || 'Keep'),
                             activity.notes || '',
-                            startSerial,
-                            endSerial,
+                            startVal,
+                            endVal,
                             timeZoneOffset
                         ]);
+
+                        // Apply date format to start/end time cells (columns 17 & 18, 1-indexed)
+                        if (startVal instanceof Date) {
+                            row.getCell(17).numFmt = 'yyyy-mm-dd h:mm';
+                        }
+                        if (endVal instanceof Date) {
+                            row.getCell(18).numFmt = 'yyyy-mm-dd h:mm';
+                        }
                     });
                 });
 
-                const ws = XLSX.utils.aoa_to_sheet(ws_data);
-
-                // Format columns
-                const range = XLSX.utils.decode_range(ws['!ref']);
-                for (let R = 1; R <= range.e.r; R++) {
-                    const dayCellRef = XLSX.utils.encode_cell({ r: R, c: 2 });
-                    const dayOrderCellRef = XLSX.utils.encode_cell({ r: R, c: 3 });
-                    const planCellRef = XLSX.utils.encode_cell({ r: R, c: 14 });
-                    const notesCellRef = XLSX.utils.encode_cell({ r: R, c: 15 });
-                    const startTimeCellRef = XLSX.utils.encode_cell({ r: R, c: 16 });
-                    const endTimeCellRef = XLSX.utils.encode_cell({ r: R, c: 17 });
-                    const offsetCellRef = XLSX.utils.encode_cell({ r: R, c: 18 });
-
-                    if (ws[dayCellRef]) { ws[dayCellRef].t = 'n'; ws[dayCellRef].z = '0'; }
-                    if (ws[dayOrderCellRef]) { ws[dayOrderCellRef].t = 'n'; ws[dayOrderCellRef].z = '0'; }
-                    if (ws[planCellRef]) ws[planCellRef].t = 's';
-                    if (ws[notesCellRef]) ws[notesCellRef].t = 's';
-                    if (ws[startTimeCellRef] && ws[startTimeCellRef].v !== '--:--') {
-                        ws[startTimeCellRef].t = 'n';
-                        ws[startTimeCellRef].z = 'yyyy-mm-dd h:mm';
-                    }
-                    if (ws[endTimeCellRef] && ws[endTimeCellRef].v !== '--:--') {
-                        ws[endTimeCellRef].t = 'n';
-                        ws[endTimeCellRef].z = 'yyyy-mm-dd h:mm';
-                    }
-                    if (ws[offsetCellRef]) ws[offsetCellRef].t = 's';
-                }
-
-                const optionsData = [
-                    ['Cognitive Tasks', 'Learner Activity', 'Delivery Methods', 'Media', 'Type of Content', 'Plan'],
-                    ...Array.from({ length: Math.max(
-                        options.cognitiveTasks.length,
-                        options.learnerActivities.length,
-                        options.deliveryMethods.length,
-                        options.mediaOptions.length,
-                        options.contentTypes.length,
-                        options.planOptions.length
-                    ) }, (_, i) => [
+                // Options sheet
+                const wsOptions = wb.addWorksheet('Options');
+                wsOptions.addRow(['Cognitive Tasks', 'Learner Activity', 'Delivery Methods', 'Media', 'Type of Content', 'Plan']);
+                const maxLen = Math.max(
+                    options.cognitiveTasks.length,
+                    options.learnerActivities.length,
+                    options.deliveryMethods.length,
+                    options.mediaOptions.length,
+                    options.contentTypes.length,
+                    options.planOptions.length
+                );
+                for (let i = 0; i < maxLen; i++) {
+                    wsOptions.addRow([
                         options.cognitiveTasks[i] || '',
                         options.learnerActivities[i] || '',
                         options.deliveryMethods[i] || '',
                         options.mediaOptions[i] || '',
                         options.contentTypes[i] || '',
                         options.planOptions[i] || ''
-                    ])
-                ];
-                const wsOptions = XLSX.utils.aoa_to_sheet(optionsData);
+                    ]);
+                }
 
-                XLSX.utils.book_append_sheet(wb, ws, "Schedule");
-                XLSX.utils.book_append_sheet(wb, wsOptions, "Options");
-
-                const excelBuffer = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
+                const excelBuffer = await wb.xlsx.writeBuffer();
                 const blob = new Blob([excelBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
                 const writable = await handle.createWritable();
                 await writable.write(blob);
