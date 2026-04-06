@@ -175,6 +175,8 @@
             const hasActivities = Array.isArray(activities) && activities.length > 0;
             const hasBreaks = hasActivities && activities.some(activity => activity.isBreak);
 
+            const filterBtn = document.getElementById('filterBtn');
+
             if (!hasActivities) {
                 programDetails.style.display = 'none';
                 programReport.style.display = 'none';
@@ -188,6 +190,8 @@
                 noDataMessage.classList.remove('hidden'); // Show message
                 noDataMessage.classList.add('shown');
                 togglePlanner.style.display = 'none';
+                if (filterBtn) { filterBtn.classList.remove('filter-visible'); }
+                if (typeof clearAllFilters === 'function') clearAllFilters();
 
                 // console.log(hasActivities);
                 // console.log(noDataMessage.classList);
@@ -204,6 +208,7 @@
                 startTimeBtn.style.display = 'inline-block'; // Add this
                 noDataMessage.classList.add('hidden'); // Hide message
                 noDataMessage.classList.remove('shown');
+                if (filterBtn) { filterBtn.classList.add('filter-visible'); }
                 // console.log(hasActivities)
             }
             updateSectionHeaders();

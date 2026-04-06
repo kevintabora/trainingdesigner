@@ -64,6 +64,7 @@
                 <button id="startTimeBtn" class="menu-button">Start Time</button>
                 <button id="toggleScheduleBtn" class="menu-button">Show Schedule</button>
                 <button id="togglePlannerBtn" class="menu-button">View Planner</button>
+                <button id="filterBtn" class="menu-button" title="Filter table rows">Filter<span class="filter-badge"></span></button>
                 <button id="goToReportBtn" class="menu-button" style="display:none;" onclick="(function(){ var el = document.getElementById('programReport'); var top = el.getBoundingClientRect().top + window.pageYOffset - document.getElementById('menuContainer').offsetHeight - 16; window.scrollTo({top: top, behavior: 'smooth'}); })()">Report <svg width="9" height="11" viewBox="0 0 11 14" fill="none" xmlns="http://www.w3.org/2000/svg" style="display:inline-block;vertical-align:middle;margin-left:3px;"><line x1="5.5" y1="0" x2="5.5" y2="11" stroke="currentColor" stroke-width="2.2"/><polyline points="1,7 5.5,12.5 10,7" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"/></svg></button>
                 <button id="goToOutlineBtn" class="menu-button" style="display:none;" onclick="(function(){ var el = document.getElementById('programDetails'); var top = el.getBoundingClientRect().top + window.pageYOffset - document.getElementById('menuContainer').offsetHeight - 16; window.scrollTo({top: top, behavior: 'smooth'}); })()">Design <svg width="9" height="11" viewBox="0 0 11 14" fill="none" xmlns="http://www.w3.org/2000/svg" style="display:inline-block;vertical-align:middle;margin-left:3px;"><line x1="5.5" y1="14" x2="5.5" y2="3" stroke="currentColor" stroke-width="2.2"/><polyline points="1,7 5.5,1.5 10,7" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"/></svg></button>
                 <button id="undoBtn" class="menu-button" title="Nothing to undo" style="font-size:var(--text-lg); letter-spacing:0;">↺</button>
@@ -364,11 +365,89 @@
             Loading<span class="loading-dots"></span>
         </div>
     </div>
+
+    <!-- Filter Modal -->
+    <div id="filterModal" class="modal-overlay">
+        <div class="modal">
+            <h2>Filter Activities</h2>
+            <div class="filter-modal-body">
+                <div class="filter-section">
+                    <div class="filter-section-label"><span class="filter-section-icon">🔍</span> Text Search</div>
+                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+                        <input type="text" class="filter-text-input" id="filterUnit" placeholder="Unit (Main Topic)">
+                        <input type="text" class="filter-text-input" id="filterModule" placeholder="Module (Subtopic)">
+                    </div>
+                    <div style="margin-top:10px;">
+                        <input type="text" class="filter-text-input" id="filterObjective" placeholder="Learning Objective">
+                    </div>
+                </div>
+                <div class="filter-divider"></div>
+                <div class="filter-section">
+                    <div class="filter-section-label"><span class="filter-section-icon">🧠</span> Cognitive Task</div>
+                    <div class="filter-chip-grid" id="filterCognitiveChips"></div>
+                </div>
+                <div class="filter-divider"></div>
+                <div class="filter-section">
+                    <div class="filter-section-label"><span class="filter-section-icon">👤</span> Learner Activity</div>
+                    <div class="filter-chip-grid" id="filterActivityChips"></div>
+                </div>
+                <div class="filter-divider"></div>
+                <div class="filter-section">
+                    <div class="filter-section-label"><span class="filter-section-icon">📡</span> Delivery Method</div>
+                    <div class="filter-chip-grid" id="filterDeliveryChips"></div>
+                </div>
+                <div class="filter-divider"></div>
+                <div class="filter-section">
+                    <div class="filter-section-label"><span class="filter-section-icon">🎬</span> Media</div>
+                    <div class="filter-chip-grid" id="filterMediaChips"></div>
+                </div>
+                <div class="filter-divider"></div>
+                <div class="filter-section">
+                    <div class="filter-section-label"><span class="filter-section-icon">📂</span> Content Type</div>
+                    <div class="filter-chip-grid" id="filterContentChips"></div>
+                </div>
+                <div class="filter-divider"></div>
+                <div class="filter-section" id="filterPlanSection" style="display:none;">
+                    <div class="filter-section-label"><span class="filter-section-icon">📋</span> Plan</div>
+                    <div class="filter-chip-grid" id="filterPlanChips"></div>
+                </div>
+                <div class="filter-divider" id="filterPlanDivider" style="display:none;"></div>
+                <div class="filter-section">
+                    <div class="filter-section-label"><span class="filter-section-icon">⏱️</span> Duration (minutes)</div>
+                    <div class="filter-range-row">
+                        <input type="number" class="filter-range-input" id="filterDurationMin" placeholder="Min" min="0">
+                        <span class="filter-range-sep">to</span>
+                        <input type="number" class="filter-range-input" id="filterDurationMax" placeholder="Max" min="0">
+                    </div>
+                </div>
+            </div>
+            <div class="filter-modal-footer">
+                <button class="filter-clear-link" id="filterClearAllBtn">Clear All Filters</button>
+                <div class="filter-modal-actions">
+                    <button id="filterCancelBtn" class="tr-orange-btn" style="background:var(--surface-0);color:var(--ink-secondary);border-color:var(--border-default);">Cancel</button>
+                    <button id="filterApplyBtn" class="tr-orange-btn">Apply Filters</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Filter Bar (shows below nav when filters active) -->
+    <div class="filter-bar" id="filterBar">
+        <span class="filter-bar-label">
+            <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M1.5 2h13l-5 6.5V14l-3-2V8.5L1.5 2z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>
+            Filtered
+        </span>
+        <div class="filter-tags" id="filterTags"></div>
+        <button class="filter-bar-clear" id="filterBarClear">Clear All</button>
+    </div>
+
     <script src="js/state.js"></script>
     <script src="js/dialog.js"></script>
     <script src="js/undo.js"></script>
     <script src="js/utils.js"></script>
     <script src="js/ui-names.js"></script>
+    <script src="js/filter.js"></script>
+    <script src="js/days.js"></script>
     <script src="js/form.js"></script>
     <script src="js/rows.js"></script>
     <script src="js/breaks.js"></script>

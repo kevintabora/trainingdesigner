@@ -413,6 +413,7 @@
             toggleVisibility();
             applyBreakVisibility();
             updateMenuButtons();
+            if (typeof hasActiveFilters === 'function' && hasActiveFilters()) applyFilters();
 
             const tables = document.querySelectorAll('.day-table');
             tables.forEach(table => {
