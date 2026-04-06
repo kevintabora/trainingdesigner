@@ -540,11 +540,8 @@
         }
         .filter-text-input::placeholder { color: var(--ink-faint); }
         .filter-chip-grid { display: flex; flex-wrap: wrap; gap: 6px; }
-        .filter-chip-grouped-list { display: flex; flex-direction: column; gap: 12px; width: 100%; }
-        .filter-chip-group-container {
-            border-left: 2px solid var(--border-default);
-            padding-left: 10px;
-        }
+        .filter-chip-grouped-list { display: flex; flex-direction: column; gap: 16px; width: 100%; }
+        .filter-chip-group-container {}
         .filter-chip-group-header { display: flex; align-items: center; gap: 6px; margin-bottom: 7px; }
         .filter-chip-group-header-label {
             font-size: 10px;
@@ -576,7 +573,6 @@
             background: var(--group-color, var(--accent));
             border-color: var(--group-color, var(--accent));
             color: white;
-            font-weight: 600;
         }
         .filter-chip-item.selected:hover { filter: brightness(1.1); }
         .filter-chip {
@@ -600,7 +596,6 @@
             background: var(--accent);
             border-color: var(--accent);
             color: var(--surface-0);
-            font-weight: 600;
         }
         .filter-chip.selected:hover {
             background: var(--accent-hover);
