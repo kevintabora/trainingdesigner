@@ -191,15 +191,83 @@
             });
         }
 
+        function buildGroupedFilterChips(containerId, groups, optionsList, filterKey) {
+            const container = document.getElementById(containerId);
+            if (!container) return;
+            container.innerHTML = '';
+
+            groups.forEach(group => {
+                // Items in this group, ordered by optionsList sequence
+                const groupItems = optionsList.filter(opt => group.activities.includes(opt));
+                if (groupItems.length === 0) return;
+
+                const groupContainer = document.createElement('div');
+                groupContainer.className = 'filter-chip-group-container';
+
+                // Group header chip
+                const groupChip = document.createElement('span');
+                groupChip.className = 'filter-chip filter-chip-group';
+                groupChip.dataset.isGroup = 'true';
+                groupChip.textContent = group.label;
+                groupChip.style.setProperty('--group-color', group.chartColor);
+
+                // Items row
+                const itemsRow = document.createElement('div');
+                itemsRow.className = 'filter-chip-group-items';
+
+                const itemChips = [];
+                groupItems.forEach(opt => {
+                    const chip = document.createElement('span');
+                    chip.className = 'filter-chip filter-chip-item';
+                    chip.textContent = opt;
+                    chip.style.setProperty('--group-color', group.chartColor);
+                    if (activeFilters[filterKey].includes(opt)) chip.classList.add('selected');
+                    itemChips.push(chip);
+                    itemsRow.appendChild(chip);
+                });
+
+                const syncGroupChip = () => {
+                    const allSelected = itemChips.length > 0 && itemChips.every(c => c.classList.contains('selected'));
+                    groupChip.classList.toggle('selected', allSelected);
+                };
+
+                // Set initial group chip state
+                syncGroupChip();
+
+                // Group chip click → toggle all items
+                groupChip.addEventListener('click', () => {
+                    const allSelected = itemChips.every(c => c.classList.contains('selected'));
+                    itemChips.forEach(c => c.classList.toggle('selected', !allSelected));
+                    groupChip.classList.toggle('selected', !allSelected);
+                });
+
+                // Item chip click → toggle, then sync group
+                itemChips.forEach(chip => {
+                    chip.addEventListener('click', () => {
+                        chip.classList.toggle('selected');
+                        syncGroupChip();
+                    });
+                });
+
+                const headerRow = document.createElement('div');
+                headerRow.className = 'filter-chip-group-header';
+                headerRow.appendChild(groupChip);
+
+                groupContainer.appendChild(headerRow);
+                groupContainer.appendChild(itemsRow);
+                container.appendChild(groupContainer);
+            });
+        }
+
         function openFilterModal() {
             document.getElementById('filterUnit').value = activeFilters.unit;
             document.getElementById('filterModule').value = activeFilters.module;
             document.getElementById('filterObjective').value = activeFilters.objective;
 
             buildFilterChips('filterCognitiveChips', options.cognitiveTasks, 'cognitiveTask');
-            buildFilterChips('filterActivityChips', options.learnerActivities, 'learnerActivity');
+            buildGroupedFilterChips('filterActivityChips', LEARNER_ACTIVITY_GROUPS, options.learnerActivities, 'learnerActivity');
             buildFilterChips('filterDeliveryChips', options.deliveryMethods, 'deliveryMethod');
-            buildFilterChips('filterMediaChips', options.mediaOptions, 'media');
+            buildGroupedFilterChips('filterMediaChips', MEDIA_GROUPS, options.mediaOptions, 'media');
             buildFilterChips('filterContentChips', options.contentTypes, 'contentType');
             buildFilterChips('filterPlanChips', options.planOptions, 'plan');
 
@@ -226,7 +294,9 @@
             activeFilters.objective = document.getElementById('filterObjective').value;
 
             const readChips = (containerId) =>
-                Array.from(document.querySelectorAll(`#${containerId} .filter-chip.selected`)).map(c => c.textContent);
+                Array.from(document.querySelectorAll(`#${containerId} .filter-chip.selected`))
+                    .filter(c => !c.dataset.isGroup)
+                    .map(c => c.textContent);
 
             activeFilters.cognitiveTask  = readChips('filterCognitiveChips');
             activeFilters.learnerActivity = readChips('filterActivityChips');
