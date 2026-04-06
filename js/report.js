@@ -155,6 +155,7 @@
                 });
 
                 const breakButtonDiv = document.createElement('div');
+                breakButtonDiv.className = 'day-footer';
                 breakButtonDiv.style.display = 'flex';
                 breakButtonDiv.style.justifyContent = 'space-between';
                 breakButtonDiv.style.alignItems = 'center';
@@ -665,14 +666,7 @@
                     maintainAspectRatio: false,
                     cutout: '50%',
                     plugins: {
-                        legend: {
-                            position: 'top',
-                            labels: {
-                                font: { family: "'Plus Jakarta Sans', Clario, sans-serif", size: 12 },
-                                boxWidth: 14,
-                                padding: 10,
-                            },
-                        },
+                        legend: makeDonutLegend(),
                         tooltip: {
                             callbacks: {
                                 label: (ctx) => {
@@ -755,6 +749,18 @@
             '#2a9d8f', '#e9c46a', '#f4a261', '#264653', '#9b2335',
         ];
 
+        // ── Shared donut legend config ───────────────────────────────────────
+        function makeDonutLegend() {
+            return {
+                position: 'top',
+                labels: {
+                    font: { family: "'Plus Jakarta Sans', Clario, sans-serif", size: 12 },
+                    boxWidth: 14,
+                    padding: 10,
+                }
+            };
+        }
+
         // ── Group small pie slices into "Other" ──────────────────────────────
         function groupSmallSlices(data, threshold = 4) {
             const total = data.total;
@@ -825,14 +831,7 @@
                         maintainAspectRatio: false,
                         cutout: '50%',
                         plugins: {
-                            legend: {
-                                position: 'top',
-                                labels: {
-                                    font: { family: "'Plus Jakarta Sans', Clario, sans-serif", size: 12 },
-                                    boxWidth: 14,
-                                    padding: 10,
-                                },
-                            },
+                            legend: makeDonutLegend(),
                             tooltip: {
                                 callbacks: {
                                     label: (ctx) => {

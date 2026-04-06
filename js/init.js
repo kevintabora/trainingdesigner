@@ -316,18 +316,48 @@
                     const total = values.reduce((a, b) => a + b, 0);
                     if (total === 0) return;
                     const maxIdx = values.indexOf(Math.max(...values));
-                    let dominantLabel = data.labels[maxIdx] || '';
+                    const dominantLabel = String(data.labels[maxIdx] || '');
                     const pct = ((values[maxIdx] / total) * 100).toFixed(0);
-                    if (dominantLabel.length > 18) dominantLabel = dominantLabel.substring(0, 16) + '…';
+
+                    // Word-wrap label to fit inside the inner circle
+                    const chartRadius = Math.min(chartArea.right - chartArea.left, chartArea.bottom - chartArea.top) / 2;
+                    const maxTextWidth = chartRadius * 0.88; // fits inside 50% cutout
                     ctx.save();
+                    ctx.font = "11px 'Plus Jakarta Sans', Clario, sans-serif";
+                    const words = dominantLabel.split(' ');
+                    const lines = [];
+                    let line = '';
+                    for (const word of words) {
+                        const test = line ? line + ' ' + word : word;
+                        if (ctx.measureText(test).width > maxTextWidth && line) {
+                            lines.push(line);
+                            line = word;
+                        } else {
+                            line = test;
+                        }
+                    }
+                    if (line) lines.push(line);
+
+                    // Compute vertical layout: pct on top, label lines below
+                    const pctSize = 15;
+                    const labelSize = 11;
+                    const lineHeight = 14;
+                    const gap = 4;
+                    const totalH = pctSize + gap + lines.length * lineHeight;
+                    let y = cy - totalH / 2 + pctSize / 2;
+
                     ctx.textAlign = 'center';
                     ctx.textBaseline = 'middle';
-                    ctx.font = "bold 15px 'Plus Jakarta Sans', Clario, sans-serif";
+                    ctx.font = `bold ${pctSize}px 'Plus Jakarta Sans', Clario, sans-serif`;
                     ctx.fillStyle = '#080d16';
-                    ctx.fillText(pct + '%', cx, cy - 10);
-                    ctx.font = "11px 'Plus Jakarta Sans', Clario, sans-serif";
+                    ctx.fillText(pct + '%', cx, y);
+
+                    ctx.font = `${labelSize}px 'Plus Jakarta Sans', Clario, sans-serif`;
                     ctx.fillStyle = '#6b7280';
-                    ctx.fillText(dominantLabel, cx, cy + 9);
+                    y += pctSize / 2 + gap;
+                    lines.forEach((l, i) => {
+                        ctx.fillText(l, cx, y + i * lineHeight + lineHeight / 2);
+                    });
                     ctx.restore();
                 }
             });

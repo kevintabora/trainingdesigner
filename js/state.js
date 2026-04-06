@@ -90,7 +90,7 @@
 
         const LEARNER_ACTIVITY_GROUPS = [
             { id: 'receptive',       label: 'Receptive Instruction',     chartColor: '#e9b045', activities: ['eLearning - Read, Watch, Listen','Lecture Participation','Podcast / Audio Review','Reading','Video / Recording Review'] },
-            { id: 'generative',      label: 'Generative Processing',     chartColor: '#0874e3', activities: ['Concept Mapping / Mind Mapping','eLearning - Interactive','Facilitated Group Activity','Pre-Training / Advance Organizer','Q&A with Instructor / Expert','Recap & Debrief','Reflection'] },
+            { id: 'generative',      label: 'Meaning Making',            chartColor: '#0874e3', activities: ['Concept Mapping / Mind Mapping','eLearning - Interactive','Facilitated Group Activity','Pre-Training / Advance Organizer','Q&A with Instructor / Expert','Recap & Debrief','Reflection'] },
             { id: 'guided-practice', label: 'Guided Practice',           chartColor: '#4db299', activities: ['Documentation Practice','eLearning - Simulate & Practice','Job Aid & Reference Lookup Practice','Shadowing & Job Observation','Software / Tool Practice','Worked Example Review'] },
             { id: 'applied-social',  label: 'Applied & Social Learning', chartColor: '#7209b7', activities: ['Asynchronous Group Discussion','Live Customer Practice','Live Group Discussion','Mentorship / Coaching','Peer Teaching','Role Play / Mock Conversation','Scenario-Based Exercise'] },
             { id: 'assessment',      label: 'Assessment',                chartColor: '#e34234', activities: ['Graded Practice Conversation','Knowledge Check','Peer Assessment','Procedural Skills Assessment','Self Assessment','Written Graded Assessment'] },
