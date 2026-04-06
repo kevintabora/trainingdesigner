@@ -52,6 +52,9 @@
       <div class="nav-item" data-panel="saving">
         <span class="nav-icon">💾</span> Saving &amp; Loading
       </div>
+      <div class="nav-item" data-panel="filtering">
+        <span class="nav-icon">🔍</span> Filtering
+      </div>
 
       <div class="sidebar-section-label">Analysis</div>
       <div class="nav-item" data-panel="report">
@@ -456,6 +459,47 @@
           <p>Go to <strong>File &rarr; Load</strong> and select a previously saved <kbd>.xlsx</kbd> file. The app reads the data and rebuilds your day tables, charts, and reports automatically.</p>
           <div class="callout callout-warn">Loading a file replaces everything currently in the app. Make sure to save your current work first if you haven't already.</div>
         </div>
+      </section>
+
+      <!-- ── FILTERING ────────────────────────────────────────────── -->
+      <section class="panel" id="filtering">
+        <div class="panel-eyebrow">Managing Your Plan</div>
+        <h1 class="panel-title">Filtering</h1>
+        <p class="panel-lead">Narrow down the activities shown in your day tables to focus on specific criteria. Filters affect only the day tables &mdash; the Report section always reflects the full, unfiltered data set.</p>
+
+        <div class="card">
+          <div class="section-title">Opening the filter</div>
+          <p>Click the <strong>Filter</strong> button in the top menu bar. It appears once you have at least one activity in your plan. A modal opens with all available filter options.</p>
+          <p>When filters are active, the Filter button shows a small blue dot indicator so you always know filtering is on.</p>
+        </div>
+
+        <div class="card">
+          <div class="section-title">Filter types</div>
+          <p>The filter modal groups filters by the type of data in each column.</p>
+          <div class="field-row"><span class="field-label">Text search</span><span class="field-val">Type to search within Unit, Module, or Learning Objective. Matches are case-insensitive and partial &mdash; typing &ldquo;sales&rdquo; will match &ldquo;Salesforce&rdquo; or &ldquo;Sales Coaching&rdquo;.</span></div>
+          <div class="field-row"><span class="field-label">Chip selectors</span><span class="field-val">Click one or more chips to filter by Cognitive Task, Learner Activity, Delivery Method, Media, or Type of Content. Selecting multiple chips in a category shows rows matching any of the selected values.</span></div>
+          <div class="field-row"><span class="field-label">Grouped chips</span><span class="field-val">Learner Activity and Media chips are organized into named groups. Click a group chip to select or deselect all items in that group at once. When every item in a group is individually selected, the group chip highlights automatically.</span></div>
+          <div class="field-row"><span class="field-label">Plan</span><span class="field-val">Filter by plan status (Keep, Remove, etc.). This section only appears when the Planner is active.</span></div>
+          <div class="field-row"><span class="field-label">Duration range</span><span class="field-val">Set a minimum and/or maximum duration in minutes to show only activities within that range.</span></div>
+        </div>
+
+        <div class="card">
+          <div class="section-title">Filter bar</div>
+          <p>When filters are applied, a bar appears below the navigation showing your active filters as labeled tags. This gives you a quick summary of what&rsquo;s currently filtered without reopening the modal.</p>
+          <p>Click <strong>Clear All</strong> on the right side of the filter bar to remove all filters at once. You can also clear all filters from within the modal using the <strong>Clear All Filters</strong> link at the bottom left.</p>
+        </div>
+
+        <div class="card">
+          <div class="section-title">Filtered duration</div>
+          <p>While filters are active, each day table&rsquo;s Total Duration updates to reflect only the visible (matching) rows. The number turns blue and shows a <em>(filtered)</em> label so you can tell at a glance that you&rsquo;re looking at a subset.</p>
+        </div>
+
+        <div class="card">
+          <div class="section-title">How breaks are handled</div>
+          <p>Break rows are only shown when your filters are purely duration-based. If any column-specific filter is active (such as Cognitive Task or Delivery Method), breaks are automatically hidden since those fields don&rsquo;t apply to them.</p>
+        </div>
+
+        <div class="callout">Filters persist while you edit, drag, or add activities. They are automatically cleared when you reset the app or remove all activities.</div>
       </section>
 
       <!-- ── REPORT ────────────────────────────────────────────── -->
