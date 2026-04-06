@@ -507,9 +507,9 @@
             // Only update line charts if there are multiple days
             if (hasMultipleDays) {
                 updateLineChart('cognitiveLineChart', lineReportData.cognitive);
-                updateLineChart('activityLineChart', lineReportData.activity);
+                updateLineChart('activityLineChart', aggregateLineDataByGroup('learnerActivity', LEARNER_ACTIVITY_GROUPS, days));
                 updateLineChart('deliveryLineChart', lineReportData.delivery);
-                updateLineChart('mediaLineChart', lineReportData.media);
+                updateLineChart('mediaLineChart', aggregateLineDataByGroup('media', MEDIA_GROUPS, days));
                 updateLineChart('contentLineChart', lineReportData.content);
             } else {
                 // Destroy existing line charts if they exist
@@ -538,9 +538,31 @@
             var labelHeader = opts.labelHeader || 'Category';
 
             const table = document.getElementById(tableId);
-            const sorted = data.labels
-                .map((label, i) => ({ label, value: data.values[i] }))
-                .sort((a, b) => b.value - a.value);
+            const paired = data.labels.map((label, i) => ({ label, value: data.values[i] }));
+
+            let sorted;
+            if (showGroup && groupLookupFn) {
+                // Calculate group totals so we can rank groups
+                const groupTotals = {};
+                paired.forEach(({ label, value }) => {
+                    const g = groupLookupFn(label);
+                    const key = g ? g.label : '';
+                    groupTotals[key] = (groupTotals[key] || 0) + value;
+                });
+                sorted = paired.slice().sort((a, b) => {
+                    const gA = groupLookupFn(a.label);
+                    const gB = groupLookupFn(b.label);
+                    const keyA = gA ? gA.label : '';
+                    const keyB = gB ? gB.label : '';
+                    // Primary: group total descending
+                    const groupDiff = (groupTotals[keyB] || 0) - (groupTotals[keyA] || 0);
+                    if (groupDiff !== 0) return groupDiff;
+                    // Secondary: individual duration descending
+                    return b.value - a.value;
+                });
+            } else {
+                sorted = paired.slice().sort((a, b) => b.value - a.value);
+            }
 
             table.innerHTML = `
                 <tr>
@@ -694,6 +716,35 @@
             };
         }
 
+        function aggregateLineDataByGroup(field, groups, days) {
+            const data = {};
+            days.forEach(day => { data[day] = {}; });
+
+            activities
+                .filter(a => !a.isBreak && a.plan !== 'Remove')
+                .forEach(activity => {
+                    const value = activity[field];
+                    const day = activity.day;
+                    let groupLabel = null;
+                    for (const group of groups) {
+                        if (group.activities.includes(value)) {
+                            groupLabel = group.label;
+                            break;
+                        }
+                    }
+                    if (!groupLabel) return;
+                    if (!data[day][groupLabel]) data[day][groupLabel] = 0;
+                    data[day][groupLabel] += activity.duration;
+                });
+
+            return {
+                labels: days,
+                values: groups.map(group => days.map(day => data[day][group.label] || 0)),
+                categories: groups.map(g => g.label),
+                groupColors: groups.map(g => g.chartColor),
+            };
+        }
+
         // ── Shared colour palette (30 colours, families interleaved) ──────────
         const CHART_COLORS = [
             '#e9b045', '#0874e3', '#4db299', '#7209b7', '#e34234',
@@ -817,7 +868,9 @@
                 data: {
                     labels: data.labels,
                     datasets: data.categories.map((category, index) => {
-                        const color = CHART_COLORS[index % CHART_COLORS.length];
+                        const color = data.groupColors
+                            ? data.groupColors[index]
+                            : CHART_COLORS[index % CHART_COLORS.length];
                         return {
                             label: category,
                             data: data.values[index],
@@ -898,9 +951,9 @@
                 function updateTypeVsCognitiveTable(filteredActivities = activities) {
             const table = document.getElementById('typeVsCognitiveTable');
             const categories = {
-                Information: ['Facts/ Concepts', 'Workflow - Operations/ Admin/ Support'],
-                Procedures: ['Procedural - Software/ Tools', 'Procedural - Customer Service'],
-                ProblemSolving: ['Problem-Solving - Software/ Tools', 'Problem-Solving - Customer Service']
+                Information: ['Facts / Concepts', 'Workflow - Operations / Admin / Support'],
+                Procedures: ['Procedural - Software / Tools', 'Procedural - Communication Skills'],
+                ProblemSolving: ['Problem-Solving - Software / Tools', 'Problem-Solving - Communication Skills']
             };
 
             const data = {};

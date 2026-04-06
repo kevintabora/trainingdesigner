@@ -93,20 +93,22 @@
                     'J': 'Media',
                     'K': 'Content Types'
                 };
+                const learnerActivitiesList = LEARNER_ACTIVITY_GROUPS.flatMap(g => g.activities);
+                const mediaOptionsList = MEDIA_GROUPS.flatMap(g => g.activities);
                 const optionsData = [
                     ['Cognitive Task', 'Learner Activity', 'Delivery Method', 'Media', 'Content Type', 'Plan'],
                     ...Array.from({ length: Math.max(
                         options.cognitiveTasks.length,
-                        options.learnerActivities.length,
+                        learnerActivitiesList.length,
                         options.deliveryMethods.length,
-                        options.mediaOptions.length,
+                        mediaOptionsList.length,
                         options.contentTypes.length,
                         options.planOptions.length
                     ) }, (_, i) => [
                         options.cognitiveTasks[i] || '',
-                        options.learnerActivities[i] || '',
+                        learnerActivitiesList[i] || '',
                         options.deliveryMethods[i] || '',
-                        options.mediaOptions[i] || '',
+                        mediaOptionsList[i] || '',
                         options.contentTypes[i] || '',
                         options.planOptions[i] || ''
                     ])

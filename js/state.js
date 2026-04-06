@@ -89,21 +89,21 @@
         };
 
         const LEARNER_ACTIVITY_GROUPS = [
-            { id: 'receptive',       label: 'Receptive Instruction',     chartColor: '#1A6FB5', activities: ['Lecture Participation','Video / Recording Review','Reading','Podcast / Audio Review','eLearning - Read, Watch, Listen'] },
-            { id: 'generative',      label: 'Generative Processing',     chartColor: '#0F8A5F', activities: ['eLearning - Interactive','Q&A with Instructor / Expert','Recap & Debrief','Reflection','Facilitated Group Activity','Concept Mapping / Mind Mapping','Pre-Training / Advance Organizer'] },
-            { id: 'guided-practice', label: 'Guided Practice',           chartColor: '#C47A00', activities: ['Worked Example Review','eLearning - Simulate & Practice','Software / Tool Practice','Documentation Practice','Job Aid & Reference Lookup Practice','Shadowing & Job Observation'] },
-            { id: 'applied-social',  label: 'Applied & Social Learning', chartColor: '#B03A2E', activities: ['Role Play / Mock Conversation','Scenario-Based Exercise','Live Group Discussion','Asynchronous Group Discussion','Peer Teaching','Live Customer Practice','Mentorship / Coaching'] },
-            { id: 'assessment',      label: 'Assessment',                chartColor: '#6C3483', activities: ['Knowledge Check','Self Assessment','Peer Assessment','Procedural Skills Assessment','Written Graded Assessment','Graded Practice Conversation'] },
-            { id: 'engagement',      label: 'Engagement & Motivation',   chartColor: '#1E7A4A', activities: ['Meet & Greet', 'Ice Breaker', 'Learning Game'] },
+            { id: 'receptive',       label: 'Receptive Instruction',     chartColor: '#e9b045', activities: ['eLearning - Read, Watch, Listen','Lecture Participation','Podcast / Audio Review','Reading','Video / Recording Review'] },
+            { id: 'generative',      label: 'Generative Processing',     chartColor: '#0874e3', activities: ['Concept Mapping / Mind Mapping','eLearning - Interactive','Facilitated Group Activity','Pre-Training / Advance Organizer','Q&A with Instructor / Expert','Recap & Debrief','Reflection'] },
+            { id: 'guided-practice', label: 'Guided Practice',           chartColor: '#4db299', activities: ['Documentation Practice','eLearning - Simulate & Practice','Job Aid & Reference Lookup Practice','Shadowing & Job Observation','Software / Tool Practice','Worked Example Review'] },
+            { id: 'applied-social',  label: 'Applied & Social Learning', chartColor: '#7209b7', activities: ['Asynchronous Group Discussion','Live Customer Practice','Live Group Discussion','Mentorship / Coaching','Peer Teaching','Role Play / Mock Conversation','Scenario-Based Exercise'] },
+            { id: 'assessment',      label: 'Assessment',                chartColor: '#e34234', activities: ['Graded Practice Conversation','Knowledge Check','Peer Assessment','Procedural Skills Assessment','Self Assessment','Written Graded Assessment'] },
+            { id: 'engagement',      label: 'Engagement & Motivation',   chartColor: '#ffbe0b', activities: ['Ice Breaker','Learning Game','Meet & Greet'] },
         ];
 
         const MEDIA_GROUPS = [
-            { id: 'document',          label: 'Documents & Text',       chartColor: '#1A6FB5', activities: ['Text Document','Spreadsheet','Activity Sheet / Workbook','Online Article / Web Page'] },
-            { id: 'visual',            label: 'Visual Presentation',    chartColor: '#C47A00', activities: ['Slideshow','Infographic / Visual Aid'] },
-            { id: 'audio-video',       label: 'Audio & Video',          chartColor: '#B03A2E', activities: ['Audio Recording / Podcast','Recorded Lecture','Produced Instructional Video'] },
-            { id: 'interactive',       label: 'Interactive Digital',    chartColor: '#0F8A5F', activities: ['eLearning Module','Quiz / Survey','Live System / Application','Digital Workspace / Notebook'] },
-            { id: 'collaborative',     label: 'Collaborative & Social', chartColor: '#6C3483', activities: ['Collaborative Platform','Discussion Channel'] },
-            { id: 'live-experiential', label: 'Live & Experiential',    chartColor: '#1E7A4A', activities: ['Guest Speaker / SME Session','VR / AR'] },
+            { id: 'document',          label: 'Documents & Text',       chartColor: '#e9b045', activities: ['Activity Sheet / Workbook','Online Article / Web Page','Spreadsheet','Text Document'] },
+            { id: 'visual',            label: 'Visual Presentation',    chartColor: '#0874e3', activities: ['Infographic / Visual Aid','Slideshow'] },
+            { id: 'audio-video',       label: 'Audio & Video',          chartColor: '#4db299', activities: ['Audio Recording / Podcast','Produced Instructional Video','Recorded Lecture'] },
+            { id: 'interactive',       label: 'Interactive Digital',    chartColor: '#7209b7', activities: ['Digital Workspace / Notebook','eLearning Module','Live System / Application','Quiz / Survey'] },
+            { id: 'collaborative',     label: 'Collaborative & Social', chartColor: '#e34234', activities: ['Collaborative Platform','Discussion Channel'] },
+            { id: 'live-experiential', label: 'Live & Experiential',    chartColor: '#ffbe0b', activities: ['Guest Speaker / SME Session','VR / AR'] },
         ];
 
         function getActivityGroup(activityName) {
