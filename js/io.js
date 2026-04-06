@@ -17,7 +17,7 @@
                 const timestamp = getFormattedUTCTimestamp();
                 const fileName = generateFileName(productName || 'Unnamed_Product', programName || 'Unnamed_Program', timestamp, false);
 
-                isFilePickerActive = true; // Set flag before showing picker
+                isFilePickerActive = true;
                 let handle;
 
                 try {
@@ -31,26 +31,25 @@
                         });
                     }
                 } catch (pickerError) {
-                    // Handle user cancellation or other picker errors
                     if (pickerError.name !== 'AbortError') {
                         console.error('Error with file picker:', pickerError);
                     }
-                    isFilePickerActive = false; // Reset flag
-                    return; // Return early to prevent further processing
+                    isFilePickerActive = false;
+                    return;
                 }
 
                 showSavingOverlay();
 
-                const wb = XLSX.utils.book_new();
-                const ws_data = [];
+                const wb = new ExcelJS.Workbook();
+                const ws = wb.addWorksheet('Training Program');
 
-                // Headers with "Day Order"
+                // Headers
                 const headers = [
                     'Product', 'Program', 'Day', 'Day Order', 'Unit (Main Topic)', 'Module (Subtopic)',
                     'Learning Objective', 'Cognitive Task', 'Learner Activity', 'Delivery Method',
                     'Media', 'Content Type', 'Duration', 'Link', 'Plan', 'Notes'
                 ];
-                ws_data.push(headers);
+                ws.addRow(headers);
 
                 // Group and order activities
                 const groupedByDay = {};
@@ -60,83 +59,93 @@
                 });
 
                 Object.keys(groupedByDay).sort((a, b) => Number(a) - Number(b)).forEach(day => {
-                groupedByDay[day].forEach((activity, orderIndex) => {
-                    ws_data.push([
-                        productName,
-                        programName,
-                        Number(activity.day),
-                        orderIndex + 1, // Adding Day Order (1-based index within each day)
-                        activity.chapter,
-                        activity.moduleTitle,
-                        activity.objective,
-                        activity.cognitiveTask,
-                        activity.learnerActivity,
-                        activity.deliveryMethod,
-                        activity.media,
-                        activity.contentType,
-                        activity.duration,
-                        activity.link || '',
-                        activity.plan || 'Keep',
-                        activity.notes || ''
-                    ]);
+                    groupedByDay[day].forEach((activity, orderIndex) => {
+                        ws.addRow([
+                            productName,
+                            programName,
+                            Number(activity.day),
+                            orderIndex + 1,
+                            activity.chapter,
+                            activity.moduleTitle,
+                            activity.objective,
+                            activity.cognitiveTask,
+                            activity.learnerActivity,
+                            activity.deliveryMethod,
+                            activity.media,
+                            activity.contentType,
+                            activity.duration,
+                            activity.link || '',
+                            activity.plan || 'Keep',
+                            activity.notes || ''
+                        ]);
+                    });
                 });
-            });
 
-                const ws = XLSX.utils.aoa_to_sheet(ws_data);
-
-                // Add data validation for dropdowns
-                if (!ws['!dataValidations']) ws['!dataValidations'] = [];
-                const validationColumns = {
-                    'G': 'Cognitive Tasks',
-                    'H': 'Learner Activities',
-                    'I': 'Delivery Methods',
-                    'J': 'Media',
-                    'K': 'Content Types'
-                };
+                // Options sheet
                 const learnerActivitiesList = LEARNER_ACTIVITY_GROUPS.flatMap(g => g.activities);
                 const mediaOptionsList = MEDIA_GROUPS.flatMap(g => g.activities);
-                const optionsData = [
-                    ['Cognitive Task', 'Learner Activity', 'Delivery Method', 'Media', 'Content Type', 'Plan'],
-                    ...Array.from({ length: Math.max(
-                        options.cognitiveTasks.length,
-                        learnerActivitiesList.length,
-                        options.deliveryMethods.length,
-                        mediaOptionsList.length,
-                        options.contentTypes.length,
-                        options.planOptions.length
-                    ) }, (_, i) => [
+                const maxLen = Math.max(
+                    options.cognitiveTasks.length,
+                    learnerActivitiesList.length,
+                    options.deliveryMethods.length,
+                    mediaOptionsList.length,
+                    options.contentTypes.length,
+                    options.planOptions.length
+                );
+
+                const wsOptions = wb.addWorksheet('Options');
+                wsOptions.addRow(['Cognitive Task', 'Learner Activity', 'Delivery Method', 'Media', 'Content Type', 'Plan']);
+                for (let i = 0; i < maxLen; i++) {
+                    wsOptions.addRow([
                         options.cognitiveTasks[i] || '',
                         learnerActivitiesList[i] || '',
                         options.deliveryMethods[i] || '',
                         mediaOptionsList[i] || '',
                         options.contentTypes[i] || '',
                         options.planOptions[i] || ''
-                    ])
-                ];
-                const wsOptions = XLSX.utils.aoa_to_sheet(optionsData);
+                    ]);
+                }
 
-                Object.entries(validationColumns).forEach(([col, listName]) => {
-                    ws['!dataValidations'].push({
-                        sqref: `${col}2:${col}1048576`,
+                // Data validation dropdowns referencing Options sheet
+                const optionsRowCount = maxLen + 1; // +1 for header
+                const validationMap = [
+                    { col: 8,  formulae: [`Options!$A$2:$A$${optionsRowCount}`] }, // Cognitive Task (col H)
+                    { col: 9,  formulae: [`Options!$B$2:$B$${optionsRowCount}`] }, // Learner Activity (col I)
+                    { col: 10, formulae: [`Options!$C$2:$C$${optionsRowCount}`] }, // Delivery Method (col J)
+                    { col: 11, formulae: [`Options!$D$2:$D$${optionsRowCount}`] }, // Media (col K)
+                    { col: 12, formulae: [`Options!$E$2:$E$${optionsRowCount}`] }, // Content Type (col L)
+                ];
+
+                validationMap.forEach(({ col, formulae }) => {
+                    const colLetter = ws.getColumn(col).letter;
+                    ws.dataValidations.add(`${colLetter}2:${colLetter}1048576`, {
                         type: 'list',
-                        formula1: `=Options!$${String.fromCharCode(65 + Object.values(validationColumns).indexOf(listName))}$2:$${String.fromCharCode(65 + Object.values(validationColumns).indexOf(listName))}$${optionsData.length}`,
                         allowBlank: false,
-                        showDropDown: true
+                        formulae: formulae,
+                        showErrorMessage: true,
+                        errorStyle: 'error',
+                        errorTitle: 'Invalid value',
+                        error: 'Please select a value from the list'
                     });
                 });
 
-                XLSX.utils.book_append_sheet(wb, ws, "Training Program");
-                XLSX.utils.book_append_sheet(wb, wsOptions, "Options");
-
-                const excelBuffer = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
-                const blob = new Blob([excelBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+                const buffer = await wb.xlsx.writeBuffer();
+                const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
 
                 if (handle) {
                     const writable = await handle.createWritable();
                     await writable.write(blob);
                     await writable.close();
                 } else {
-                    XLSX.writeFile(wb, fileName);
+                    // Fallback: trigger browser download
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = fileName;
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                    URL.revokeObjectURL(url);
                 }
 
                 hideScheduleModal();
@@ -150,7 +159,7 @@
                 }
             } finally {
                 hideSavingOverlay();
-                isFilePickerActive = false; // Always reset the flag when done
+                isFilePickerActive = false;
             }
         }
 
@@ -168,97 +177,113 @@
             input.onchange = async e => {
                 try {
                     const file = e.target.files[0];
-                    const fileName = file.name.replace(/\.[^/.]+$/, ""); // Remove extension (e.g., "TrainingProgram.xlsx" -> "TrainingProgram")
                     const reader = new FileReader();
 
                     reader.onload = async function(event) {
                         try {
-                        const data = new Uint8Array(event.target.result);
-                        const workbook = XLSX.read(data, { type: 'array' });
-                        const worksheet = workbook.Sheets[workbook.SheetNames[0]];
-                        const jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
+                            const arrayBuffer = event.target.result;
 
-                        if (jsonData.length < 2) throw new Error('The file appears to be empty or missing data.');
+                            const workbook = new ExcelJS.Workbook();
+                            await workbook.xlsx.load(arrayBuffer);
+                            const worksheet = workbook.worksheets[0];
 
-                        const headers = jsonData[0];
-                        const columnIndices = {};
-                        headers.forEach((header, i) => {
-                            if (typeof header === 'string') {
-                                columnIndices[header.trim()] = i;
-                            }
-                        });
-
-                        // Snapshot current state BEFORE anything changes
-                        if (activities.length > 0) pushUndo('Loaded new file');
-
-                        // Extract Product and Program names — keep empty if not in file
-                        if (jsonData.length > 1) {
-                            const productIndex = columnIndices['Product'];
-                            const programIndex = columnIndices['Program'];
-
-                            let productValue = productIndex !== undefined ? String(jsonData[1][productIndex] || '').trim() : '';
-                            let programValue = programIndex !== undefined ? String(jsonData[1][programIndex] || '').trim() : '';
-
-                            currentProductName = productValue;
-                            currentProgramName = programValue;
-                        } else {
-                            currentProductName = '';
-                            currentProgramName = '';
-                        }
-
-                        const dayOrderIndex = headers.indexOf('Day Order');
-                        const hasDayOrder = dayOrderIndex !== -1;
-
-                        const requiredHeaders = ['Day', 'Unit (Main Topic)', 'Module (Subtopic)', 'Learning Objective',
-                            'Cognitive Task', 'Learner Activity', 'Delivery Method', 'Media', 'Type of Content', 'Duration'];
-                        const optionalHeaders = { 'Link': '', 'Plan': 'Keep', 'Notes': '' };
-
-                        requiredHeaders.forEach(header => {
-                            if (columnIndices[header] === undefined) throw new Error(`Required column "${header}" not found.`);
-                        });
-
-                        const newActivities = jsonData.slice(1).map((row, index) => {
-                            if (!row.length) return null;
-                            const activity = {
-                                day: parseInt(row[columnIndices['Day']]),
-                                chapter: row[columnIndices['Unit (Main Topic)']],
-                                moduleTitle: row[columnIndices['Module (Subtopic)']],
-                                objective: row[columnIndices['Learning Objective']],
-                                cognitiveTask: row[columnIndices['Cognitive Task']],
-                                learnerActivity: row[columnIndices['Learner Activity']],
-                                deliveryMethod: row[columnIndices['Delivery Method']],
-                                media: row[columnIndices['Media']],
-                                contentType: row[columnIndices['Type of Content']],
-                                duration: parseInt(row[columnIndices['Duration']] || 0),
-                                isBreak: String(row[columnIndices['Unit (Main Topic)']]).toLowerCase() === 'break'
-                            };
-                            Object.entries(optionalHeaders).forEach(([header, defaultValue]) => {
-                                activity[header.toLowerCase()] = columnIndices[header] !== undefined ? (row[columnIndices[header]] || defaultValue) : defaultValue;
+                            // Convert worksheet to array-of-arrays (row.values is 1-indexed)
+                            const jsonData = [];
+                            worksheet.eachRow({ includeEmpty: false }, (row) => {
+                                // row.values[0] is undefined (1-based), slice from 1
+                                jsonData.push(row.values.slice(1).map(v => {
+                                    if (v === null || v === undefined) return '';
+                                    // ExcelJS may return rich-text objects or formula results
+                                    if (typeof v === 'object' && v.result !== undefined) return v.result;
+                                    if (typeof v === 'object' && v.text !== undefined) return v.text;
+                                    if (typeof v === 'object' && v.richText !== undefined) {
+                                        return v.richText.map(r => r.text).join('');
+                                    }
+                                    return v;
+                                }));
                             });
-                            activity.dayOrder = hasDayOrder && row[dayOrderIndex] ? parseInt(row[dayOrderIndex]) : index + 1;
-                            return activity;
-                        }).filter(a => a);
 
-                        newActivities.sort((a, b) => {
-                            if (a.day !== b.day) return a.day - b.day;
-                            return hasDayOrder ? (a.dayOrder - b.dayOrder) : (a.dayOrder - b.dayOrder);
-                        });
+                            if (jsonData.length < 2) throw new Error('The file appears to be empty or missing data.');
 
-                        activities = newActivities.map(({ dayOrder, ...rest }) => rest);
+                            const headers = jsonData[0];
+                            const columnIndices = {};
+                            headers.forEach((header, i) => {
+                                if (typeof header === 'string') {
+                                    columnIndices[header.trim()] = i;
+                                }
+                            });
 
-                        saveToLocalStorage();
-                        updateProgramDetails();
-                        generateReport();
-                        toggleVisibility();
-                        restorePlanColumnVisibility();
+                            // Snapshot current state BEFORE anything changes
+                            if (activities.length > 0) pushUndo('Loaded new file');
 
-                        updateSectionHeaders();
+                            // Extract Product and Program names
+                            if (jsonData.length > 1) {
+                                const productIndex = columnIndices['Product'];
+                                const programIndex = columnIndices['Program'];
 
-                        if (wasScheduleVisible) toggleScheduleColumns();
-                        if (wasPlannerVisible) togglePlannerColumns();
+                                let productValue = productIndex !== undefined ? String(jsonData[1][productIndex] || '').trim() : '';
+                                let programValue = programIndex !== undefined ? String(jsonData[1][programIndex] || '').trim() : '';
 
-                        window.scrollTo({ top: 0, behavior: 'smooth' });
-                        showDialog({type:'success', title:'Loaded', message:'Training data has been imported successfully.'});
+                                currentProductName = productValue;
+                                currentProgramName = programValue;
+                            } else {
+                                currentProductName = '';
+                                currentProgramName = '';
+                            }
+
+                            const dayOrderIndex = headers.indexOf('Day Order');
+                            const hasDayOrder = dayOrderIndex !== -1;
+
+                            const requiredHeaders = ['Day', 'Unit (Main Topic)', 'Module (Subtopic)', 'Learning Objective',
+                                'Cognitive Task', 'Learner Activity', 'Delivery Method', 'Media', 'Content Type', 'Duration'];
+                            const optionalHeaders = { 'Link': '', 'Plan': 'Keep', 'Notes': '' };
+
+                            requiredHeaders.forEach(header => {
+                                if (columnIndices[header] === undefined) throw new Error(`Required column "${header}" not found.`);
+                            });
+
+                            const newActivities = jsonData.slice(1).map((row, index) => {
+                                if (!row.length) return null;
+                                const activity = {
+                                    day: parseInt(row[columnIndices['Day']]),
+                                    chapter: row[columnIndices['Unit (Main Topic)']],
+                                    moduleTitle: row[columnIndices['Module (Subtopic)']],
+                                    objective: row[columnIndices['Learning Objective']],
+                                    cognitiveTask: row[columnIndices['Cognitive Task']],
+                                    learnerActivity: row[columnIndices['Learner Activity']],
+                                    deliveryMethod: row[columnIndices['Delivery Method']],
+                                    media: row[columnIndices['Media']],
+                                    contentType: row[columnIndices['Content Type']],
+                                    duration: parseInt(row[columnIndices['Duration']] || 0),
+                                    isBreak: String(row[columnIndices['Unit (Main Topic)']]).toLowerCase() === 'break'
+                                };
+                                Object.entries(optionalHeaders).forEach(([header, defaultValue]) => {
+                                    activity[header.toLowerCase()] = columnIndices[header] !== undefined ? (row[columnIndices[header]] || defaultValue) : defaultValue;
+                                });
+                                activity.dayOrder = hasDayOrder && row[dayOrderIndex] ? parseInt(row[dayOrderIndex]) : index + 1;
+                                return activity;
+                            }).filter(a => a);
+
+                            newActivities.sort((a, b) => {
+                                if (a.day !== b.day) return a.day - b.day;
+                                return a.dayOrder - b.dayOrder;
+                            });
+
+                            activities = newActivities.map(({ dayOrder, ...rest }) => rest);
+
+                            saveToLocalStorage();
+                            updateProgramDetails();
+                            generateReport();
+                            toggleVisibility();
+                            restorePlanColumnVisibility();
+
+                            updateSectionHeaders();
+
+                            if (wasScheduleVisible) toggleScheduleColumns();
+                            if (wasPlannerVisible) togglePlannerColumns();
+
+                            window.scrollTo({ top: 0, behavior: 'smooth' });
+                            showDialog({type:'success', title:'Loaded', message:'Training data has been imported successfully.'});
                         } catch (loadError) {
                             console.error('Error loading file:', loadError);
                             showDialog({type:'danger', title:'Import Error', message:'The file could not be loaded. Make sure it is a valid .xlsx file with the required column headers (Day, Unit, Module, Learning Objective, etc.).<br><br><strong>Details:</strong> ' + loadError.message});
