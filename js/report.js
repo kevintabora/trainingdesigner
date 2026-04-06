@@ -703,10 +703,13 @@
                     data[day][value] += activity.duration;
                 });
 
+            const activeCategories = Array.from(categories).filter(category =>
+                days.some(day => (data[day][category] || 0) > 0)
+            );
             return {
-                labels: days, // X-axis: days
-                values: Array.from(categories).map(category => days.map(day => data[day][category] || 0)),
-                categories: Array.from(categories), // Legend: categories
+                labels: days,
+                values: activeCategories.map(category => days.map(day => data[day][category] || 0)),
+                categories: activeCategories,
             };
         }
 
@@ -731,11 +734,14 @@
                     data[day][groupLabel] += activity.duration;
                 });
 
+            const activeGroups = groups.filter(group =>
+                days.some(day => (data[day][group.label] || 0) > 0)
+            );
             return {
                 labels: days,
-                values: groups.map(group => days.map(day => data[day][group.label] || 0)),
-                categories: groups.map(g => g.label),
-                groupColors: groups.map(g => g.chartColor),
+                values: activeGroups.map(group => days.map(day => data[day][group.label] || 0)),
+                categories: activeGroups.map(g => g.label),
+                groupColors: activeGroups.map(g => g.chartColor),
             };
         }
 

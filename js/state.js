@@ -103,7 +103,7 @@
             { id: 'audio-video',       label: 'Audio & Video',          chartColor: '#4db299', activities: ['Audio Recording / Podcast','Produced Instructional Video','Recorded Lecture'] },
             { id: 'interactive',       label: 'Interactive Digital',    chartColor: '#7209b7', activities: ['Digital Workspace / Notebook','eLearning Module','Live System / Application','Quiz / Survey'] },
             { id: 'collaborative',     label: 'Collaborative & Social', chartColor: '#e34234', activities: ['Collaborative Platform','Discussion Channel'] },
-            { id: 'live-experiential', label: 'Live & Experiential',    chartColor: '#ffbe0b', activities: ['Guest Speaker / SME Session','VR / AR'] },
+            { id: 'live-experiential', label: 'Live & Experiential',    chartColor: '#ff006e', activities: ['Guest Speaker / SME Session','VR / AR'] },
         ];
 
         function getActivityGroup(activityName) {
