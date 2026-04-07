@@ -411,6 +411,26 @@
         }
         #filterBtn.has-filters { color: var(--accent); }
 
+        #daysBtn {
+            position: relative;
+        }
+        #daysBtn .days-badge {
+            position: absolute;
+            top: 8px;
+            right: 4px;
+            width: 8px;
+            height: 8px;
+            background: var(--accent);
+            border-radius: 50%;
+            display: none;
+            pointer-events: none;
+        }
+        #daysBtn.has-hidden-days .days-badge {
+            display: block;
+            animation: filterPulse 0.4s var(--ease-out);
+        }
+        #daysBtn.has-hidden-days { color: var(--accent); }
+
         .filter-bar {
             display: none;
             align-items: center;

@@ -55,16 +55,16 @@
                 <button id="deleteAllBreaksBtn" class="menu-button">Delete Breaks</button>
                 <button id="selectAllBtn" class="menu-button" style="display: none;">Select All</button>
                 <div class="dropdown">
-                    <button id="daysBtn" class="menu-button">Days</button>
+                    <button id="daysBtn" class="menu-button">Days<span class="days-badge"></span></button>
                     <div id="daysDropdown" class="dropdown-content hidden">
-                        <p id="daysInstruction" style="margin: 5px 0 10px; font-size: var(--text-xs); color: var(--ink-tertiary); text-align: center; line-height: 1.4;"><strong>Note: </strong>Uncheck to hide a day (deselects all rows). A warning appears when days are hidden. Hidden days ignore Select All. Click a day to scroll to it.</p>
+                        <p id="daysInstruction" style="margin: 5px 0 10px; font-size: var(--text-xs); color: var(--ink-tertiary); text-align: center; line-height: 1.4;"><strong>Note: </strong>Uncheck to hide a day (deselects all rows). A blue dot appears when days are hidden. Hidden days ignore Select All. Click a day to scroll to it.</p>
                         <div id="daysList" class="days-list"></div>
                     </div>
                 </div>
+                <button id="filterBtn" class="menu-button" title="Filter table rows">Filter<span class="filter-badge"></span></button>
                 <button id="startTimeBtn" class="menu-button">Start Time</button>
                 <button id="toggleScheduleBtn" class="menu-button">Show Schedule</button>
                 <button id="togglePlannerBtn" class="menu-button">View Planner</button>
-                <button id="filterBtn" class="menu-button" title="Filter table rows">Filter<span class="filter-badge"></span></button>
                 <button id="goToReportBtn" class="menu-button" style="display:none;" onclick="(function(){ var el = document.getElementById('programReport'); var top = el.getBoundingClientRect().top + window.pageYOffset - document.getElementById('menuContainer').offsetHeight - 16; window.scrollTo({top: top, behavior: 'smooth'}); })()">Report <svg width="9" height="11" viewBox="0 0 11 14" fill="none" xmlns="http://www.w3.org/2000/svg" style="display:inline-block;vertical-align:middle;margin-left:3px;"><line x1="5.5" y1="0" x2="5.5" y2="11" stroke="currentColor" stroke-width="2.2"/><polyline points="1,7 5.5,12.5 10,7" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"/></svg></button>
                 <button id="goToOutlineBtn" class="menu-button" style="display:none;" onclick="(function(){ var el = document.getElementById('programDetails'); var top = el.getBoundingClientRect().top + window.pageYOffset - document.getElementById('menuContainer').offsetHeight - 16; window.scrollTo({top: top, behavior: 'smooth'}); })()">Design <svg width="9" height="11" viewBox="0 0 11 14" fill="none" xmlns="http://www.w3.org/2000/svg" style="display:inline-block;vertical-align:middle;margin-left:3px;"><line x1="5.5" y1="14" x2="5.5" y2="3" stroke="currentColor" stroke-width="2.2"/><polyline points="1,7 5.5,1.5 10,7" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"/></svg></button>
                 <button id="undoBtn" class="menu-button" title="Nothing to undo" style="font-size:var(--text-lg); letter-spacing:0;">↺</button>

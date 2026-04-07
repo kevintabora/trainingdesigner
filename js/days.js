@@ -109,5 +109,5 @@
             if (!daysBtn) return;
             const anyHidden = Array.from(document.querySelectorAll('#daysList input[type="checkbox"]'))
                 .some(checkbox => !checkbox.checked);
-            daysBtn.textContent = anyHidden ? 'Days ⚠' : 'Days';
+            daysBtn.classList.toggle('has-hidden-days', anyHidden);
         }
